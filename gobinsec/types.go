@@ -43,7 +43,9 @@ type Node struct {
 }
 
 type Match struct {
-	Vulnerable          bool   `json:"vulnerable"`
-	VersionEndExcluding string `json:"versionEndExcluding"`
-	VersionEndIncluding string `json:"versionEndIncluding"`
+	Vulnerable            bool   `json:"vulnerable"`
+	VersionStartExcluding string `json:"versionStartExcluding"`
+	VersionStartIncluding string `json:"versionStartIncluding"`
+	VersionEndExcluding   string `json:"versionEndExcluding"`
+	VersionEndIncluding   string `json:"versionEndIncluding"`
 }

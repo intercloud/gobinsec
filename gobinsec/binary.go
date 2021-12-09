@@ -57,6 +57,7 @@ func (b *Binary) GetDependencies() error {
 }
 
 // Report prints a report on terminal
+// nolint:gocyclo // this is life
 func (b *Binary) Report(verbose bool) {
 	fmt.Printf("binary: '%s'\n", b.Path)
 	fmt.Printf("vulnerable: %t\n", b.Vulnerable)
@@ -84,6 +85,12 @@ func (b *Binary) Report(verbose bool) {
 					}
 					fmt.Println("    versions:")
 					for _, match := range vulnerability.Matchs {
+						if match.VersionStartExcluding != nil {
+							fmt.Printf("    - >: '%v'\n", match.VersionStartExcluding)
+						}
+						if match.VersionStartIncluding != nil {
+							fmt.Printf("    - >=: '%v'\n", match.VersionStartIncluding)
+						}
 						if match.VersionEndExcluding != nil {
 							fmt.Printf("    - <: '%v'\n", match.VersionEndExcluding)
 						}
