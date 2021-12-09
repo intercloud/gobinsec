@@ -13,6 +13,7 @@ const PseudoVersionTimeFormat = "20060102150405"
 // representation is something like "v0.0.0-20191109021931-daa7c04131f5"
 // with time and commit ID
 type PseudoVersion struct {
+	Prefix string    // the version prefix
 	Time   time.Time // the time of the last commit
 	Commit string    // the last commit ID
 }
@@ -23,11 +24,9 @@ func NewPseudoVersion(s string) (*PseudoVersion, error) {
 	if len(parts) != 3 { // nolint:gomnd // 3 is magic
 		return nil, fmt.Errorf("bad pseudo version fields count: %s", s)
 	}
-	if parts[0] != "v0.0.0" && parts[0] != "0.0.0" {
-		return nil, fmt.Errorf("bad pseudo version first part: %s", s)
-	}
 	var pseudoVersion PseudoVersion
 	var err error
+	pseudoVersion.Prefix = parts[0]
 	pseudoVersion.Time, err = time.Parse(PseudoVersionTimeFormat, parts[1])
 	if err != nil {
 		return nil, fmt.Errorf("wrong pseudo version time: %s", s)
@@ -38,7 +37,7 @@ func NewPseudoVersion(s string) (*PseudoVersion, error) {
 
 // String returns a string representation for pseudo version
 func (p *PseudoVersion) String() string {
-	return fmt.Sprintf("v0.0.0-%s-%s", p.Time.Format(PseudoVersionTimeFormat), p.Commit)
+	return fmt.Sprintf("%s-%s-%s", p.Prefix, p.Time.Format(PseudoVersionTimeFormat), p.Commit)
 }
 
 // Compare two pseudo versions by time

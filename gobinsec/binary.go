@@ -75,8 +75,9 @@ func (b *Binary) Report(verbose bool) {
 					if !vulnerability.Exposed && !verbose {
 						continue
 					}
-					fmt.Printf("  - ID: '%s'\n", vulnerability.ID)
+					fmt.Printf("  - id: '%s'\n", vulnerability.ID)
 					fmt.Printf("    exposed: %t\n", vulnerability.Exposed)
+					fmt.Printf("    ignored: %t\n", vulnerability.Ignored)
 					fmt.Println("    references:")
 					for _, reference := range vulnerability.References {
 						fmt.Printf("    - '%s'\n", reference)

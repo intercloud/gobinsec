@@ -6,6 +6,8 @@ import (
 	"net/http"
 )
 
+const URL = "https://services.nvd.nist.gov/rest/json/cves/1.0/?keyword="
+
 // Dependency is a dependency with vulnerabilities
 type Dependency struct {
 	Name            string
@@ -32,7 +34,7 @@ func NewDependency(name, version string) (*Dependency, error) {
 		if err != nil {
 			return nil, err
 		}
-		if is {
+		if is && !dependency.Vulnerabilities[i].Ignored {
 			dependency.Vulnerable = true
 		}
 	}
@@ -41,7 +43,11 @@ func NewDependency(name, version string) (*Dependency, error) {
 
 // Vulnerabilities return list of vulnerabilities for given dependency
 func (d *Dependency) LoadVulnerabilities() error {
-	response, err := http.Get(URL + d.Name) // nolint:noctx // context is useless
+	url := URL + d.Name
+	if config.APIKey != "" {
+		url += "&apiKey=" + config.APIKey
+	}
+	response, err := http.Get(url) // nolint:noctx,gosec // it's safe!
 	if err != nil {
 		return fmt.Errorf("calling NVD: %v", err)
 	}
