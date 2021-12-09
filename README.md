@@ -25,9 +25,9 @@ dependencies:
     - <: '0.3.3'
 ```
 
-Exit code is *1* if binary is vulnerable and *2* if there was an error analyzing binary and *0* otherwise. If binary is vulnerable, exposed vulnerabilities are printed in report.
+Exit code is *1* if binary is vulnerable, *2* if there was an error analyzing binary and *0* otherwise. If binary is vulnerable, exposed vulnerabilities are printed in report.
 
-You can pass *-verbose* option on command line to print vulnerability report, even if binary is not vulnerable and for all vulnerabilities, even if they are not exposed.
+You can pass *-verbose* option on command line to print vulnerability report, even if binary is not vulnerable and for all vulnerabilities, even if they are ignored or not exposed.
 
 ## Configuration
 
@@ -50,7 +50,7 @@ It has two entries:
 - **api-key**: this is your NVD API key
 - **ignore**: a list of CVE vulnerabilities to ignore
 
-Note that without API key,you will be limited to *10* requests in a rolling *60* second window; the rate limit with an API key is *100* requests in a rolling *60* second window.
+Note that without API key, you will be limited to *10* requests in a rolling *60* second window while this limit is *100* with an API key.
 
 ## Data source
 
