@@ -1,4 +1,4 @@
-package main
+package gobinsec
 
 type Response struct {
 	ResultsPerPage int    `json:"resultsPerPage"`

@@ -1,4 +1,4 @@
-package main
+package gobinsec
 
 import "testing"
 
@@ -40,7 +40,7 @@ func TestCompareVersionSemantic(t *testing.T) {
 	if err == nil {
 		t.Fatalf("should have produced an error comparing semantic version with date version")
 	}
-	if err.Error() != `can't compare semantic version to other type: *main.DateVersion` {
+	if err.Error() != `can't compare semantic version to other type: *gobinsec.DateVersion` {
 		t.Fatalf("bad error message: %s", err.Error())
 	}
 }

@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	"github.com/intercloud/gobinsec/gobinsec"
 )
 
 const (
@@ -18,9 +20,9 @@ func main() {
 		println("ERROR you must pass one binary to analyze")
 	}
 	path := flag.Args()[0]
-	binary, err := NewBinary(path)
+	binary, err := gobinsec.NewBinary(path)
 	if err != nil {
-		fmt.Printf("ERROR analyzing %s: %v\n", path, err)
+		println(fmt.Sprintf("ERROR analyzing %s: %v", path, err))
 		os.Exit(codeError)
 	}
 	binary.Report(*verbose)
