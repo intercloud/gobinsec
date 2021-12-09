@@ -24,3 +24,8 @@ integ: build # Run integration test
 	-@$(BUILD_DIR)/gobinsec test/binary > $(BUILD_DIR)/report.yml
 	@test $? || (echo "ERROR should have exited with code 1" && exit 1)
 	@cmp test/report.yml $(BUILD_DIR)/report.yml
+
+binaries: # Generate binaries
+	@GOOS=linux GOARCH=amd64 go build -o $(BUILD_DIR)/gobinsec-linux-amd64 .
+	@GOOS=darwin GOARCH=amd64 go build -o $(BUILD_DIR)/gobinsec-darwin-amd64 .
+	@GOOS=darwin GOARCH=arm64 go build -o $(BUILD_DIR)/gobinsec-linux-arm64 .
