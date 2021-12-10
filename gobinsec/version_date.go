@@ -13,6 +13,7 @@ type DateVersion time.Time
 
 // NewDateVersion builds a date version from string
 func NewDateVersion(s string) (*DateVersion, error) {
+	s = TrimPrefixSuffix(s)
 	t, err := time.Parse(DateVersionTimeFormat, s)
 	if err != nil {
 		return nil, fmt.Errorf("parsing date version: %v", err)

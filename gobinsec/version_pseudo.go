@@ -20,6 +20,7 @@ type PseudoVersion struct {
 
 // NewPseudoVersion builds a pseudo version from string
 func NewPseudoVersion(s string) (*PseudoVersion, error) {
+	s = TrimPrefixSuffix(s)
 	parts := strings.Split(s, "-")
 	if len(parts) != 3 { // nolint:gomnd // 3 is magic
 		return nil, fmt.Errorf("bad pseudo version fields count: %s", s)

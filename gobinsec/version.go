@@ -2,6 +2,7 @@ package gobinsec
 
 import (
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -43,4 +44,11 @@ func GetVersionTime(v interface{}) (*time.Time, error) {
 // Time2Date rounds time to date
 func Time2Date(t time.Time) time.Time {
 	return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+}
+
+// TrimPrefixSuffix removed 'v' before and '+incompatible' after versions
+func TrimPrefixSuffix(s string) string {
+	s = strings.TrimPrefix(s, "v")
+	s = strings.TrimSuffix(s, "+incompatible")
+	return s
 }

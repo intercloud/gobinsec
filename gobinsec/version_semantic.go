@@ -11,13 +11,13 @@ type SemanticVersion [3]int
 
 // NewSemanticVersion builds a version from string
 func NewSemanticVersion(s string) (*SemanticVersion, error) {
+	s = TrimPrefixSuffix(s)
 	parts := strings.Split(s, ".")
 	if len(parts) != 3 { // nolint:gomnd // 3 is magic
 		return nil, fmt.Errorf("wrong version parts count: %s", s)
 	}
 	var version SemanticVersion
 	var err error
-	parts[0] = strings.TrimPrefix(parts[0], "v")
 	for i := 0; i < 3; i++ {
 		version[i], err = strconv.Atoi(parts[i])
 		if err != nil {
