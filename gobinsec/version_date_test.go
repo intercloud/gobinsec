@@ -11,7 +11,7 @@ func TestNewDateVersion(t *testing.T) {
 		t.Fatalf("error parsing version: %v", err)
 	}
 	t1 := time.Time(*version)
-	t2, _ := time.Parse(DateVersionTimeFormat, "2021-12-08") // nolint:errcheck // testing
+	t2 := time.Date(2021, 12, 8, 0, 0, 0, 0, time.Now().UTC().Location())
 	if !t1.Equal(t2) {
 		t.Fatalf("creating date: %v", t1)
 	}
