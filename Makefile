@@ -21,6 +21,9 @@ build: # Build binary
 	@mkdir -p $(BUILD_DIR)
 	@go build -o $(BUILD_DIR)/ ./...
 
+install: # Build and install tool
+	@go install .
+
 integ: build # Run integration test
 	-@$(BUILD_DIR)/gobinsec test/binary > $(BUILD_DIR)/report.yml
 	@test $? || (echo "ERROR should have exited with code 1" && exit 1)
