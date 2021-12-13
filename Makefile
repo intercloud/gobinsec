@@ -34,4 +34,4 @@ integ: build # Run integration test
 binaries: # Generate binaries
 	@GOOS=linux GOARCH=amd64 go build -o $(BUILD_DIR)/gobinsec-linux-amd64 .
 	@GOOS=darwin GOARCH=amd64 go build -o $(BUILD_DIR)/gobinsec-darwin-amd64 .
-	@GOOS=darwin GOARCH=arm64 go build -o $(BUILD_DIR)/gobinsec-linux-arm64 .
+	@GOOS=darwin GOARCH=arm64 go build -o $(BUILD_DIR)/gobinsec-darwin-arm64 .
