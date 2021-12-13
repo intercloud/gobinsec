@@ -3,7 +3,9 @@ package gobinsec
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"strings"
+	"sync"
 )
 
 const (
@@ -11,11 +13,14 @@ const (
 	MinimumBinaryLines            = 3
 )
 
+// NumGoroutines to load vulnerabilities
+var NumGoroutines = 4 * runtime.NumCPU()
+
 // Binary represents a binary with its dependencies
 type Binary struct {
-	Path         string       // path to binary file
-	Dependencies []Dependency // list of dependencies
-	Vulnerable   bool         // tells if binary is vulnerable
+	Path         string        // path to binary file
+	Dependencies []*Dependency // list of dependencies
+	Vulnerable   bool          // tells if binary is vulnerable
 }
 
 // NewBinary returns a binary
@@ -60,12 +65,39 @@ func (b *Binary) GetDependencies() error {
 		if err != nil {
 			return err
 		}
+		b.Dependencies = append(b.Dependencies, dependency)
+	}
+	dependencies := make(chan *Dependency, len(b.Dependencies))
+	var wg sync.WaitGroup
+	for _, dependency := range b.Dependencies {
+		dependencies <- dependency
+		wg.Add(1)
+	}
+	for i := 0; i < NumGoroutines; i++ {
+		go LoadVulnerabilities(dependencies, &wg)
+	}
+	wg.Wait()
+	for _, dependency := range b.Dependencies {
 		if dependency.Vulnerable {
 			b.Vulnerable = true
 		}
-		b.Dependencies = append(b.Dependencies, *dependency)
 	}
 	return nil
+}
+
+// LoadVulnerabilities takes dependencies from channel and loads dependencies for it
+func LoadVulnerabilities(dependencies chan *Dependency, wg *sync.WaitGroup) {
+	for {
+		select {
+		case dependency := <-dependencies:
+			if err := dependency.LoadVulnerabilities(); err != nil {
+				panic(fmt.Sprintf("ERROR loading vulnerability: %v", err))
+			}
+			wg.Done()
+		default:
+			return
+		}
+	}
 }
 
 // Report prints a report on terminal

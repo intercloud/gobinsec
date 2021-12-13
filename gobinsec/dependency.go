@@ -23,15 +23,6 @@ func NewDependency(name, version string) (*Dependency, error) {
 		Name:    name,
 		Version: v,
 	}
-	if err := dependency.LoadVulnerabilities(); err != nil {
-		return nil, err
-	}
-	for i := range dependency.Vulnerabilities {
-		if dependency.Vulnerabilities[i].IsExposed(v) &&
-			!dependency.Vulnerabilities[i].Ignored {
-			dependency.Vulnerable = true
-		}
-	}
 	return &dependency, nil
 }
 
@@ -54,6 +45,10 @@ func (d *Dependency) LoadVulnerabilities() error {
 		vulnerability, err := NewVulnerability(item)
 		if err != nil {
 			return err
+		}
+		if vulnerability.IsExposed(d.Version) &&
+			!vulnerability.Ignored {
+			d.Vulnerable = true
 		}
 		d.Vulnerabilities = append(d.Vulnerabilities, *vulnerability)
 	}
