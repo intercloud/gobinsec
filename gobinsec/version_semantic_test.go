@@ -7,14 +7,14 @@ func TestNewSemanticVersion(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error parsing version: %v", err)
 	}
-	if version[0] != 1 {
-		t.Fatalf("bad major version: %d", version[0])
+	if version.Fields[0] != 1 {
+		t.Fatalf("bad major version: %d", version.Fields[0])
 	}
-	if version[1] != 2 {
-		t.Fatalf("bad minor version: %d", version[1])
+	if version.Fields[1] != 2 {
+		t.Fatalf("bad minor version: %d", version.Fields[1])
 	}
-	if version[2] != 3 {
-		t.Fatalf("bad debug version: %d", version[2])
+	if version.Fields[2] != 3 {
+		t.Fatalf("bad debug version: %d", version.Fields[2])
 	}
 }
 

@@ -2,7 +2,6 @@ package gobinsec
 
 import (
 	"fmt"
-	"strings"
 	"time"
 )
 
@@ -13,42 +12,34 @@ type Version interface {
 }
 
 // NewVersion from string
-func NewVersion(v string) (Version, error) {
-	s, err := NewSemanticVersion(v)
+func NewVersion(version string) Version {
+	semantic, err := NewSemanticVersion(version)
 	if err == nil {
-		return s, nil
+		return semantic
 	}
-	p, err := NewPseudoVersion(v)
+	pseudo, err := NewPseudoVersion(version)
 	if err == nil {
-		return p, nil
+		return pseudo
 	}
-	return NewDateVersion(v)
+	date, err := NewDateVersion(version)
+	if err == nil {
+		return date
+	}
+	return NewUnknownVersion(version)
 }
 
 // GetVersionTime extracts time from pseudo or date version
-func GetVersionTime(v interface{}) (*time.Time, error) {
-	p, ok := v.(*PseudoVersion)
+func GetVersionTime(version interface{}) (*time.Time, error) {
+	pseudo, ok := version.(*PseudoVersion)
 	if ok {
-		d := Time2Date(p.Time)
+		d := pseudo.Date
 		return &d, nil
 	} else {
-		d, ok := v.(*DateVersion)
+		date, ok := version.(*DateVersion)
 		if !ok {
-			return nil, fmt.Errorf("unknown version type: %T", v)
+			return nil, fmt.Errorf("unknown version type: %T", version)
 		}
-		t := Time2Date(time.Time(*d))
-		return &t, nil
+		d := date.Date
+		return &d, nil
 	}
-}
-
-// Time2Date rounds time to date
-func Time2Date(t time.Time) time.Time {
-	return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
-}
-
-// TrimPrefixSuffix removed 'v' before and '+incompatible' after versions
-func TrimPrefixSuffix(s string) string {
-	s = strings.TrimPrefix(s, "v")
-	s = strings.TrimSuffix(s, "+incompatible")
-	return s
 }

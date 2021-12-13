@@ -2,7 +2,7 @@ binary: 'test/binary'
 vulnerable: true
 dependencies:
 - name:    'golang.org/x/text'
-  version: '0.3.0'
+  version: 'v0.3.0'
   vulnerable: true
   vulnerabilities:
   - id: 'CVE-2020-14040'

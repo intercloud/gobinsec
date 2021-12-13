@@ -10,7 +10,7 @@ func TestNewDateVersion(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error parsing version: %v", err)
 	}
-	t1 := time.Time(*version)
+	t1 := version.Date
 	t2 := time.Date(2021, 12, 8, 0, 0, 0, 0, time.Now().UTC().Location())
 	if !t1.Equal(t2) {
 		t.Fatalf("creating date: %v", t1)

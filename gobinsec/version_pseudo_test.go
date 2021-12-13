@@ -7,11 +7,8 @@ func TestNewPseudoVersion(t *testing.T) {
 	if err != nil {
 		t.Fatalf("parsing pseudo version: %v", err)
 	}
-	if pseudoVersion.Time.Format(PseudoVersionTimeFormat) != "20191109021931" {
-		t.Fatalf("bad pseudo version time: %s", pseudoVersion.Time.Format(PseudoVersionTimeFormat))
-	}
-	if pseudoVersion.Commit != "daa7c04131f5" {
-		t.Fatalf("bad pseudo version commit: %s", pseudoVersion.Commit)
+	if pseudoVersion.Date.Format(PseudoVersionTimeFormat) != "20191109" {
+		t.Fatalf("bad pseudo version time: %s", pseudoVersion.Date.Format(PseudoVersionTimeFormat))
 	}
 }
 

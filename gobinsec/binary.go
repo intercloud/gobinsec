@@ -6,6 +6,11 @@ import (
 	"strings"
 )
 
+const (
+	MinimumBinaryDependencyFields = 3
+	MinimumBinaryLines            = 3
+)
+
 // Binary represents a binary with its dependencies
 type Binary struct {
 	Path         string       // path to binary file
@@ -33,15 +38,22 @@ func (b *Binary) GetDependencies() error {
 	if err != nil {
 		return err
 	}
-	if stderr == fmt.Sprintf("%s: not executable file", b.Path) {
+	if stderr != "" {
 		return fmt.Errorf(stderr)
 	}
-	for _, line := range strings.Split(stdout, "\n")[3:] {
+	lines := strings.Split(stdout, "\n")
+	if len(lines) < MinimumBinaryLines {
+		return fmt.Errorf(stdout)
+	}
+	for _, line := range lines[3:] {
 		line = strings.TrimSpace(line)
 		if line == "" {
 			continue
 		}
 		parts := strings.Split(line, "\t")
+		if len(parts) < MinimumBinaryDependencyFields {
+			continue
+		}
 		name := parts[1]
 		version := parts[2]
 		dependency, err := NewDependency(name, version)
