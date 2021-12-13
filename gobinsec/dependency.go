@@ -18,10 +18,7 @@ type Dependency struct {
 
 // NewDependency builds a new dependency and loads its vulnerabilities
 func NewDependency(name, version string) (*Dependency, error) {
-	v, err := NewVersion(version)
-	if err != nil {
-		return nil, err
-	}
+	v := NewVersion(version)
 	dependency := Dependency{
 		Name:    name,
 		Version: v,
@@ -30,11 +27,8 @@ func NewDependency(name, version string) (*Dependency, error) {
 		return nil, err
 	}
 	for i := range dependency.Vulnerabilities {
-		is, err := dependency.Vulnerabilities[i].IsExposed(v)
-		if err != nil {
-			return nil, err
-		}
-		if is && !dependency.Vulnerabilities[i].Ignored {
+		if dependency.Vulnerabilities[i].IsExposed(v) &&
+			!dependency.Vulnerabilities[i].Ignored {
 			dependency.Vulnerable = true
 		}
 	}

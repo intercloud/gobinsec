@@ -12,20 +12,20 @@ type Version interface {
 }
 
 // NewVersion from string
-func NewVersion(version string) (Version, error) {
+func NewVersion(version string) Version {
 	semantic, err := NewSemanticVersion(version)
 	if err == nil {
-		return semantic, nil
+		return semantic
 	}
 	pseudo, err := NewPseudoVersion(version)
 	if err == nil {
-		return pseudo, nil
+		return pseudo
 	}
 	date, err := NewDateVersion(version)
 	if err == nil {
-		return date, nil
+		return date
 	}
-	return nil, fmt.Errorf("bad version: %s", version)
+	return NewUnknownVersion(version)
 }
 
 // GetVersionTime extracts time from pseudo or date version
