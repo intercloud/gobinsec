@@ -19,6 +19,7 @@ func main() {
 	flag.Parse()
 	if len(flag.Args()) != 1 {
 		println("ERROR you must pass one binary to analyze")
+		os.Exit(codeError)
 	}
 	if err := gobinsec.LoadConfig(*config); err != nil {
 		println(fmt.Sprintf("ERROR loading configuration: %v", err))
