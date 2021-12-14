@@ -37,11 +37,13 @@ binaries: # Generate binaries
 	@GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.Version=$(VERSION) -s -f" -o $(BUILD_DIR)/gobinsec-darwin-amd64 .
 	@GOOS=darwin GOARCH=arm64 go build -ldflags "-X main.Version=$(VERSION) -s -f" -o $(BUILD_DIR)/gobinsec-darwin-arm64 .
 
-version: # Check that VERSION=X.Y.Z was passed on command line
+release: clean lint test integ binaries # Perform release (must pass VERSION=X.Y.Z on command line)
 	@if [ "$(VERSION)" = "UNKNOWN" ]; then \
 		echo "ERROR you must pass VERSION=X.Y.Z on command line"; \
 		exit 1; \
 	fi
-
-release: version clean lint test integ binaries # Perform release (must pass VERSION=X.Y.Z on command line)
+	@git diff-index --quiet HEAD -- || (echo "ERROR There are uncommitted changes" && exit 1)
+	@test `git rev-parse --abbrev-ref HEAD` = 'main' || (echo "ERROR You are not on branch main" && exit 1)
+	@git tag -a $(VERSION) -m "Release $(VERSION)"
 	@git tag $(VERSION)
+	@git push origin --tags
