@@ -144,7 +144,7 @@ func (b *Binary) Report(verbose bool) {
 							parts = append(parts, fmt.Sprintf("<= %v", match.VersionEndIncluding))
 						}
 						text := strings.Join(parts, " ")
-						fmt.Printf("    - %s\n", text)
+						fmt.Printf("    - '%s'\n", text)
 					}
 				}
 			}
