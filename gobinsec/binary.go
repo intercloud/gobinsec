@@ -127,20 +127,24 @@ func (b *Binary) Report(verbose bool) {
 					for _, reference := range vulnerability.References {
 						fmt.Printf("    - '%s'\n", reference)
 					}
-					fmt.Println("    versions:")
+					fmt.Println("    matchs:")
 					for _, match := range vulnerability.Matchs {
+						var parts []string
 						if match.VersionStartExcluding != nil {
-							fmt.Printf("    - >: '%v'\n", match.VersionStartExcluding)
+							parts = append(parts, fmt.Sprintf("%v <", match.VersionStartExcluding))
 						}
 						if match.VersionStartIncluding != nil {
-							fmt.Printf("    - >=: '%v'\n", match.VersionStartIncluding)
+							parts = append(parts, fmt.Sprintf("%v <=", match.VersionStartIncluding))
 						}
+						parts = append(parts, "v")
 						if match.VersionEndExcluding != nil {
-							fmt.Printf("    - <: '%v'\n", match.VersionEndExcluding)
+							parts = append(parts, fmt.Sprintf("< %v", match.VersionEndExcluding))
 						}
 						if match.VersionEndIncluding != nil {
-							fmt.Printf("    - <=: '%v'\n", match.VersionEndIncluding)
+							parts = append(parts, fmt.Sprintf("<= %v", match.VersionEndIncluding))
 						}
+						text := strings.Join(parts, " ")
+						fmt.Printf("    - %s\n", text)
 					}
 				}
 			}

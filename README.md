@@ -54,6 +54,99 @@ Note that without API key, you will be limited to *10* requests in a rolling *60
 
 ## Data source
 
-This tool calls [National Vulnerability Database](https://nvd.nist.gov/) that lists known vulnerabilities. You can find documentation on its API at <https://nvd.nist.gov/developers/vulnerabilities> and get an API key here: <https://nvd.nist.gov/developers/request-an-api-key>.
+This tool first lists dependencies embedded in binary with `go version -m binary` command:
+
+```
+$ go version -m test/binary
+test/binary: go1.17.3
+	path	nancy-test
+	mod	nancy-test	(devel)
+	dep	golang.org/x/text	v0.3.0	h1:g61tztE5qeGQ89tm6NTjjM9VPIm088od1l6aSorWRWg=
+```
+
+Then, it calls [National Vulnerability Database](https://nvd.nist.gov/) to lists known vulnerabilities for embedded dependencies. You can find documentation on its API at <https://nvd.nist.gov/developers/vulnerabilities> and get an API key here: <https://nvd.nist.gov/developers/request-an-api-key>.
+
+For instance, to get vulnerabilities for library *golang.org/x/text*, we would call <https://services.nvd.nist.gov/rest/json/cves/1.0/?keyword=golang.org/x/text>, which returns following JSON payload:
+
+```json
+{
+    "resultsPerPage": 1,
+    "startIndex": 0,
+    "totalResults": 1,
+    "result": {
+        "CVE_data_type": "CVE",
+        "CVE_data_format": "MITRE",
+        "CVE_data_version": "4.0",
+        "CVE_data_timestamp": "2021-12-07T15:40Z",
+        "CVE_Items": [
+            {
+                "cve": {
+                    "data_type": "CVE",
+                    "data_format": "MITRE",
+                    "data_version": "4.0",
+                    "CVE_data_meta": {
+                        "ID": "CVE-2020-14040",
+                        "ASSIGNER": "cve@mitre.org"
+                    },
+                    "problemtype": {
+                        ...
+                    },
+                    "references": {
+                        "reference_data": [
+                            {
+                                "url": "https://groups.google.com/forum/#!topic/golang-announce/bXVeAmGOqz0",
+                                "name": "https://groups.google.com/forum/#!topic/golang-announce/bXVeAmGOqz0",
+                                "refsource": "MISC",
+                                "tags": [
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            ...
+                        ]
+                    },
+                    "description": {
+                        "description_data": [
+                            {
+                                "lang": "en",
+                                "value": "..."
+                            }
+                        ]
+                    }
+                },
+                "configurations": {
+                    "CVE_data_version": "4.0",
+                    "nodes": [
+                        {
+                            "operator": "OR",
+                            "children": [],
+                            "cpe_match": [
+                                {
+                                    "vulnerable": true,
+                                    "cpe23Uri": "cpe:2.3:a:golang:text:*:*:*:*:*:*:*:*",
+                                    "versionEndExcluding": "0.3.3",
+                                    "cpe_name": []
+                                }
+                            ]
+                        },
+                        ...
+                    ]
+                },
+                "impact": {
+                    "baseMetricV3": {
+                        ...
+                    },
+                    "baseMetricV2": {
+                        ...
+                    }
+                },
+                "publishedDate": "2020-06-17T20:15Z",
+                "lastModifiedDate": "2020-11-18T14:44Z"
+            }
+        ]
+    }
+}
+```
+
+This data is parsed to produce YAML report.
 
 *Enjoy!*
