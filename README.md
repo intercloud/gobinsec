@@ -7,12 +7,12 @@ This tool parses Go binary dependencies, calls NVD database to produce a vulnera
 To analyze given binary:
 
 ```yaml
-$ gobinsec path/to/binary
-binary: 'path/to/binary'
+$ $ gobinsec path/to/binary
+binary: 'binary'
 vulnerable: true
 dependencies:
 - name:    'golang.org/x/text'
-  version: '0.3.0'
+  version: 'v0.3.0'
   vulnerable: true
   vulnerabilities:
   - id: 'CVE-2020-14040'
@@ -21,8 +21,8 @@ dependencies:
     references:
     - 'https://groups.google.com/forum/#!topic/golang-announce/bXVeAmGOqz0'
     - 'https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/TACQFZDPA7AUR6TRZBCX2RGRFSDYLI7O/'
-    versions:
-    - <: '0.3.3'
+    matchs:
+    - 'v < 0.3.3'
 ```
 
 Exit code is *1* if binary is vulnerable, *2* if there was an error analyzing binary and *0* otherwise. If binary is vulnerable, exposed vulnerabilities are printed in report.

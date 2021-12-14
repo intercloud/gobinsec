@@ -3,6 +3,7 @@ package gobinsec
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"sync"
@@ -103,7 +104,7 @@ func LoadVulnerabilities(dependencies chan *Dependency, wg *sync.WaitGroup) {
 // Report prints a report on terminal
 // nolint:gocyclo // this is life
 func (b *Binary) Report(verbose bool) {
-	fmt.Printf("binary: '%s'\n", b.Path)
+	fmt.Printf("binary: '%s'\n", filepath.Base(b.Path))
 	fmt.Printf("vulnerable: %t\n", b.Vulnerable)
 	if len(b.Dependencies) > 0 && (b.Vulnerable || verbose) {
 		fmt.Println("dependencies:")
