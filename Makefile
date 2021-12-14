@@ -45,5 +45,4 @@ release: clean lint test integ binaries # Perform release (must pass VERSION=X.Y
 	@git diff-index --quiet HEAD -- || (echo "ERROR There are uncommitted changes" && exit 1)
 	@test `git rev-parse --abbrev-ref HEAD` = 'main' || (echo "ERROR You are not on branch main" && exit 1)
 	@git tag -a $(VERSION) -m "Release $(VERSION)"
-	@git tag $(VERSION)
 	@git push origin --tags
