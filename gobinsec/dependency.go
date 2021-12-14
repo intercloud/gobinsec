@@ -6,7 +6,10 @@ import (
 	"net/http"
 )
 
-const URL = "https://services.nvd.nist.gov/rest/json/cves/1.0/?keyword="
+const (
+	URL             = "https://services.nvd.nist.gov/rest/json/cves/1.0/?keyword="
+	StatusCodeLimit = 300
+)
 
 // Dependency is a dependency with vulnerabilities
 type Dependency struct {
@@ -37,6 +40,9 @@ func (d *Dependency) LoadVulnerabilities() error {
 		return fmt.Errorf("calling NVD: %v", err)
 	}
 	defer response.Body.Close()
+	if response.StatusCode >= StatusCodeLimit {
+		return fmt.Errorf("bad status code calling NVD: %d", response.StatusCode)
+	}
 	var result Response
 	if err := json.NewDecoder(response.Body).Decode(&result); err != nil {
 		return fmt.Errorf("decoding JSON response: %v", err)

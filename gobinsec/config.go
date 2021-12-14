@@ -26,6 +26,9 @@ func LoadConfig(path string) error {
 	if err := yaml.Unmarshal(bytes, &config); err != nil {
 		return fmt.Errorf("parsing configuration: %v", err)
 	}
+	if config.APIKey == "" {
+		config.APIKey = os.Getenv("NVD_API_KEY")
+	}
 	return nil
 }
 

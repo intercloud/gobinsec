@@ -29,7 +29,8 @@ integ: build # Run integration test
 	-@$(BUILD_DIR)/gobinsec test/binary > $(BUILD_DIR)/report.yml
 	@test $? || (echo "ERROR should have exited with code 1" && exit 1)
 	@cmp test/report.yml $(BUILD_DIR)/report.yml
-	@$(BUILD_DIR)/gobinsec -verbose -config test/config.yml test/binary > $(BUILD_DIR)/report-config.yml
+	@cat test/config.yml | envsubst > $(BUILD_DIR)/config.yml
+	@$(BUILD_DIR)/gobinsec -verbose -config $(BUILD_DIR)/config.yml test/binary > $(BUILD_DIR)/report-config.yml
 	@cmp test/report-config.yml $(BUILD_DIR)/report-config.yml
 
 binaries: # Generate binaries
