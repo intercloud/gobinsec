@@ -50,6 +50,8 @@ It has two entries:
 - **api-key**: this is your NVD API key
 - **ignore**: a list of CVE vulnerabilities to ignore
 
+You can also set NVD API Key in your environment with variable *NVD_API_KEY*. This key may be overwritten with value in configuration file. Your API key must be set in environment to be able to run integration tests (with target *integ*).
+
 Note that without API key, you will be limited to *10* requests in a rolling *60* second window while this limit is *100* with an API key.
 
 ## Data source
