@@ -1,4 +1,4 @@
-binary: 'test/binary'
+binary: 'binary'
 vulnerable: true
 dependencies:
 - name:    'golang.org/x/text'
