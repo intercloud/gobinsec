@@ -7,7 +7,7 @@ This tool parses Go binary dependencies, calls NVD database to produce a vulnera
 To analyze given binary:
 
 ```yaml
-$ $ gobinsec path/to/binary
+$ gobinsec path/to/binary
 binary: 'binary'
 vulnerable: true
 dependencies:
