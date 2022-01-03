@@ -10,12 +10,13 @@ import (
 type Config struct {
 	APIKey string   `yaml:"api-key"`
 	Ignore []string `yaml:"ignore"`
+	Strict bool     `yaml:"strict"`
 }
 
 var config Config
 
 // LoadConfig loads configuration from given file
-func LoadConfig(path string) error {
+func LoadConfig(path string, strict bool) error {
 	if path == "" {
 		return nil
 	}
@@ -28,6 +29,9 @@ func LoadConfig(path string) error {
 	}
 	if config.APIKey == "" {
 		config.APIKey = os.Getenv("NVD_API_KEY")
+	}
+	if strict {
+		config.Strict = strict
 	}
 	return nil
 }

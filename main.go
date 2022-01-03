@@ -18,6 +18,7 @@ var Version = "NONE"
 func main() {
 	version := flag.Bool("version", false, "Print gobinsec version")
 	verbose := flag.Bool("verbose", false, "Print additional information in terminal")
+	strict := flag.Bool("strict", false, "Vulnerabilities without version are exposed")
 	config := flag.String("config", "", "Configuration file")
 	flag.Parse()
 	if *version {
@@ -28,7 +29,7 @@ func main() {
 		println("ERROR you must pass one binary to analyze")
 		os.Exit(CodeError)
 	}
-	if err := gobinsec.LoadConfig(*config); err != nil {
+	if err := gobinsec.LoadConfig(*config, *strict); err != nil {
 		println(fmt.Sprintf("ERROR loading configuration: %v", err))
 		os.Exit(CodeError)
 	}

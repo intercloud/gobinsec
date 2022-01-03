@@ -23,11 +23,14 @@ dependencies:
     - 'https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/TACQFZDPA7AUR6TRZBCX2RGRFSDYLI7O/'
     matchs:
     - 'v < 0.3.3'
+    - '?'
 ```
 
 Exit code is *1* if binary is vulnerable, *2* if there was an error analyzing binary and *0* otherwise. If binary is vulnerable, exposed vulnerabilities are printed in report.
 
 You can pass *-verbose* option on command line to print vulnerability report, even if binary is not vulnerable and for all vulnerabilities, even if they are ignored or not exposed.
+
+You can set *-strict* flag on command line so that vulnerabilities without version are considered matching vulnerability. In this case, you should check vulnerability manually and disable it in configuration file if necessary.
 
 ## Configuration
 
@@ -41,6 +44,7 @@ Configuration file is in YAML format as follows:
 
 ```yaml
 api-key: "28c6112c-a7bc-4a4e-9b14-75be6da02211"
+strict: false
 ignore:
 - "CVE-2020-14040"
 ```
@@ -48,6 +52,7 @@ ignore:
 It has two entries:
 
 - **api-key**: this is your NVD API key
+- **strict**: tells if we should consider vulnerability matches without version as matching dependency
 - **ignore**: a list of CVE vulnerabilities to ignore
 
 You can also set NVD API Key in your environment with variable *NVD_API_KEY*. This key may be overwritten with value in configuration file. Your API key must be set in environment to be able to run integration tests (with target *integ*).
