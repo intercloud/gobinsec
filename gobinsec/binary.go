@@ -130,21 +130,29 @@ func (b *Binary) Report(verbose bool) {
 					}
 					fmt.Println("    matchs:")
 					for _, match := range vulnerability.Matchs {
-						var parts []string
-						if match.VersionStartExcluding != nil {
-							parts = append(parts, fmt.Sprintf("%v <", match.VersionStartExcluding))
+						var text string
+						if match.VersionStartExcluding != nil ||
+							match.VersionStartIncluding != nil ||
+							match.VersionEndExcluding != nil ||
+							match.VersionEndIncluding != nil {
+							var parts []string
+							if match.VersionStartExcluding != nil {
+								parts = append(parts, fmt.Sprintf("%v <", match.VersionStartExcluding))
+							}
+							if match.VersionStartIncluding != nil {
+								parts = append(parts, fmt.Sprintf("%v <=", match.VersionStartIncluding))
+							}
+							parts = append(parts, "v")
+							if match.VersionEndExcluding != nil {
+								parts = append(parts, fmt.Sprintf("< %v", match.VersionEndExcluding))
+							}
+							if match.VersionEndIncluding != nil {
+								parts = append(parts, fmt.Sprintf("<= %v", match.VersionEndIncluding))
+							}
+							text = strings.Join(parts, " ")
+						} else {
+							text = "?"
 						}
-						if match.VersionStartIncluding != nil {
-							parts = append(parts, fmt.Sprintf("%v <=", match.VersionStartIncluding))
-						}
-						parts = append(parts, "v")
-						if match.VersionEndExcluding != nil {
-							parts = append(parts, fmt.Sprintf("< %v", match.VersionEndExcluding))
-						}
-						if match.VersionEndIncluding != nil {
-							parts = append(parts, fmt.Sprintf("<= %v", match.VersionEndIncluding))
-						}
-						text := strings.Join(parts, " ")
 						fmt.Printf("    - '%s'\n", text)
 					}
 				}
