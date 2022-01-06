@@ -2,6 +2,10 @@
 
 This tool parses Go binary dependencies, calls NVD database to produce a vulnerability report for this binary.
 
+## Install
+
+Download binary for your platform in [latest release](https://github.com/intercloud/gobinsec/releases). Rename it *gobinsec*, make it executable with `chmod +x gobinsec` and move it somewhere in your *PATH*.
+
 ## Usage
 
 To analyze given binary:
