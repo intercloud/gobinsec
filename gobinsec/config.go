@@ -18,6 +18,7 @@ var config Config
 // LoadConfig loads configuration from given file
 func LoadConfig(path string, strict bool) error {
 	if path == "" {
+		config.Strict = strict
 		return nil
 	}
 	bytes, err := os.ReadFile(path)
