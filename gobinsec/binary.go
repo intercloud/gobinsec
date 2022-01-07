@@ -92,7 +92,8 @@ func LoadVulnerabilities(dependencies chan *Dependency, wg *sync.WaitGroup) {
 		select {
 		case dependency := <-dependencies:
 			if err := dependency.LoadVulnerabilities(); err != nil {
-				panic(fmt.Sprintf("ERROR loading vulnerability: %v", err))
+				fmt.Printf("ERROR loading vulnerability: %v\n", err)
+				os.Exit(1)
 			}
 			wg.Done()
 		default:
