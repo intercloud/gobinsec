@@ -71,12 +71,12 @@ Dependencies and vulnerabilities have versions. There are three types of them:
 - **Commit**: such as `v0.0.0-20210410081132-afb366fc7cd1` which is made of three parts: a major version, build date and commit ID
 - **Date**: in ISO format such as `2022-01-07`
 
-A dependency may have a tag or commit version. In the first case, developer used a released version of this dependency, in the last he is using a particular commit that wasn't released.
+A dependency may have a tag or commit version. In the first case, developer used a released version of this dependency, in the last he's using a particular commit that wasn't released.
 
 A vulnerability might have version conditions on tag or date. For instance:
 
-- `v < 2017-03-17` means that vulnerability will affect dependencies before 2017-03-17.
-- `1.16.0 <= v <= 1.16.4` means that vulnerability will affect dependencies from version 1.16.0 to 1.16.4, included
+- `v < 2017-03-17` means that vulnerability will affect dependencies before *2017-03-17*.
+- `1.16.0 <= v <= 1.16.4` means that vulnerability will affect dependencies from version *1.16.0* to *1.16.4*, included
 
 Given vulnerability is exposed if dependency version is in the range of affected versions. Thus to determine if a dependency is affected we must be able to compare versions between dependency and vulnerability.
 
@@ -86,7 +86,7 @@ Given vulnerability is exposed if dependency version is in the range of affected
 
 In this later case, the vulnerability is considered exposed. You should check manually if release date of the dependency is in the date range of the vulnerability or not. You can then ignore vulnerability adding its ID in the configuration *ignore* list.
 
-Sometimes, vulnerabilities have no version or date range. This is the case when vulnerability affects a given software (a Linux distribution for instance). In this case, vulnerability condition appears as a question mark and we consider that dependency is not affected. You can change this behavior pssing `-strict` option on command line or in configuration. In this case you will have to check manually and ignore such vulnerabilities.
+Sometimes, vulnerabilities have no version or date range. This is the case when vulnerability affects a given software (a Linux distribution for instance). In this case, vulnerability condition appears as a question mark and we consider that dependency is not affected. You can change this behavior passing `-strict` option on command line or in configuration. In this case you will have to check manually and ignore such vulnerabilities.
 
 ## Data source
 
