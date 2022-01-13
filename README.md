@@ -185,4 +185,8 @@ For instance, to get vulnerabilities for library *golang.org/x/text*, we would c
 
 This data is parsed to produce YAML report.
 
+# License
+
+This software is release under the [GNU General Public License](https://www.gnu.org/licenses/gpl-3.0.html).
+
 *Enjoy!*
