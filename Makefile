@@ -1,5 +1,6 @@
 BUILD_DIR = build
 VERSION   = "UNKNOWN"
+GOOSARCH  = $(shell go tool dist list | grep -v android)
 
 .DEFAULT_GOAL :=
 default: clean fmt lint test integ
@@ -34,9 +35,9 @@ integ: build # Run integration test
 	@cmp test/report-config.yml $(BUILD_DIR)/report-config.yml
 
 binaries: # Generate binaries
-	@GOOS=linux GOARCH=amd64 go build -ldflags "-X main.Version=$(VERSION) -s -f" -o $(BUILD_DIR)/gobinsec-linux-amd64 .
-	@GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.Version=$(VERSION) -s -f" -o $(BUILD_DIR)/gobinsec-darwin-amd64 .
-	@GOOS=darwin GOARCH=arm64 go build -ldflags "-X main.Version=$(VERSION) -s -f" -o $(BUILD_DIR)/gobinsec-darwin-arm64 .
+	$(title)
+	@mkdir -p $(BUILD_DIR)/bin
+	@gox -ldflags "-X main.Version=$(VERSION) -s -f" -osarch '$(GOOSARCH)' -output=$(BUILD_DIR)/bin/{{.Dir}}-{{.OS}}-{{.Arch}} $(GOPACKAGE)
 
 release: clean lint test integ binaries # Perform release (must pass VERSION=X.Y.Z on command line)
 	@if [ "$(VERSION)" = "UNKNOWN" ]; then \
