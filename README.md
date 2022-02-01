@@ -88,6 +88,19 @@ In this later case, the vulnerability is considered exposed. You should check ma
 
 Sometimes, vulnerabilities have no version or date range. This is the case when vulnerability affects a given software (a Linux distribution for instance). In this case, vulnerability condition appears as a question mark and we consider that dependency is not affected. You can change this behavior passing `-strict` option on command line or in configuration. In this case you will have to check manually and ignore such vulnerabilities.
 
+## How to Fix Vulnerabilities
+
+In some cases, you can fix a vulnerability by using latest dependency version. Let's say dependency *golang.org/x/crypto* in version *v0.0.0-20200622213623-75b288015ac9* is affected by vulnerability [CVE-2020-29652](https://nvd.nist.gov/vuln/detail/CVE-2020-29652).
+
+We can see in vulnerability description that it was fixed after version *0.0.0-20201203163018-be400aefbc4c*. Thus latest version *v0.0.0-20220128200615-198e4374d7ed* will fix the issue. We can update this dependency to latest version with following commands:
+
+```
+$ go get -u golang.org/x/crypto
+$ go mod tidy
+```
+
+Of course this is possible only if a version that fixes the issue was released.
+
 ## Data source
 
 This tool first lists dependencies embedded in binary with `go version -m binary` command:
