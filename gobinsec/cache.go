@@ -4,17 +4,17 @@ import (
 	"sync"
 )
 
-type DependencyCache map[string][]Vulnerability
+type VulnerabilityCache map[string][]Vulnerability
 
 var lock sync.RWMutex
-var cache = NewDependencyCache()
+var cache = NewVulnerabilityCache()
 
-func NewDependencyCache() *DependencyCache {
-	cache := make(DependencyCache)
+func NewVulnerabilityCache() *VulnerabilityCache {
+	cache := make(VulnerabilityCache)
 	return &cache
 }
 
-func (dc *DependencyCache) Get(d *Dependency) []Vulnerability {
+func (dc *VulnerabilityCache) Get(d *Dependency) []Vulnerability {
 	key := d.Hash()
 	lock.RLock()
 	defer lock.RUnlock()
@@ -25,7 +25,7 @@ func (dc *DependencyCache) Get(d *Dependency) []Vulnerability {
 	return nil
 }
 
-func (dc *DependencyCache) Put(d *Dependency, v []Vulnerability) {
+func (dc *VulnerabilityCache) Put(d *Dependency, v []Vulnerability) {
 	key := d.Hash()
 	if v == nil {
 		v = make([]Vulnerability, 0)
