@@ -3,6 +3,7 @@ package gobinsec
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -32,24 +33,27 @@ func NewDependency(name, version string) (*Dependency, error) {
 // Vulnerabilities return list of vulnerabilities for given dependency
 func (d *Dependency) LoadVulnerabilities() error {
 	vulnerabilities := cache.Get(d)
-	if vulnerabilities != nil {
-		d.Vulnerabilities = vulnerabilities
-		return nil
-	}
-	url := URL + d.Name
-	if config.APIKey != "" {
-		url += "&apiKey=" + config.APIKey
-	}
-	response, err := http.Get(url) // nolint:noctx,gosec // it's safe!
-	if err != nil {
-		return fmt.Errorf("calling NVD: %v", err)
-	}
-	defer response.Body.Close()
-	if response.StatusCode >= StatusCodeLimit {
-		return fmt.Errorf("bad status code calling NVD: %d", response.StatusCode)
+	if vulnerabilities == nil {
+		url := URL + d.Name
+		if config.APIKey != "" {
+			url += "&apiKey=" + config.APIKey
+		}
+		response, err := http.Get(url) // nolint:noctx,gosec // it's safe!
+		if err != nil {
+			return fmt.Errorf("calling NVD: %v", err)
+		}
+		defer response.Body.Close()
+		if response.StatusCode >= StatusCodeLimit {
+			return fmt.Errorf("bad status code calling NVD: %d", response.StatusCode)
+		}
+		vulnerabilities, err = io.ReadAll(response.Body)
+		if err != nil {
+			return err
+		}
+		cache.Set(d, vulnerabilities)
 	}
 	var result Response
-	if err := json.NewDecoder(response.Body).Decode(&result); err != nil {
+	if err := json.Unmarshal(vulnerabilities, &result); err != nil {
 		return fmt.Errorf("decoding JSON response: %v", err)
 	}
 	for _, item := range result.Result.Items {
@@ -63,7 +67,6 @@ func (d *Dependency) LoadVulnerabilities() error {
 		}
 		d.Vulnerabilities = append(d.Vulnerabilities, *vulnerability)
 	}
-	cache.Put(d, d.Vulnerabilities)
 	return nil
 }
 

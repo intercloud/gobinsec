@@ -1,36 +1,18 @@
 package gobinsec
 
-import (
-	"sync"
-)
+var cache Cache
 
-type VulnerabilityCache map[string][]Vulnerability
-
-var lock sync.RWMutex
-var cache = NewVulnerabilityCache()
-
-func NewVulnerabilityCache() *VulnerabilityCache {
-	cache := make(VulnerabilityCache)
-	return &cache
+type Cache interface {
+	Get(d *Dependency) []byte
+	Set(d *Dependency, v []byte)
+	Ping() error
 }
 
-func (dc *VulnerabilityCache) Get(d *Dependency) []Vulnerability {
-	key := d.Key()
-	lock.RLock()
-	defer lock.RUnlock()
-	vulnerabilities, ok := (*dc)[key]
-	if ok {
-		return vulnerabilities
+func BuildCache() error {
+	if config.Memcached == nil {
+		cache = NewMemoryCache()
+	} else {
+		cache = NewMemcachedCache()
 	}
-	return nil
-}
-
-func (dc *VulnerabilityCache) Put(d *Dependency, v []Vulnerability) {
-	key := d.Key()
-	if v == nil {
-		v = make([]Vulnerability, 0)
-	}
-	lock.Lock()
-	defer lock.Unlock()
-	(*dc)[key] = v
+	return cache.Ping()
 }

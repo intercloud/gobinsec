@@ -8,9 +8,15 @@ import (
 )
 
 type Config struct {
-	APIKey string   `yaml:"api-key"`
-	Ignore []string `yaml:"ignore"`
-	Strict bool     `yaml:"strict"`
+	APIKey    string           `yaml:"api-key"`
+	Memcached *MemcachedConfig `yaml:"memcached"`
+	Ignore    []string         `yaml:"ignore"`
+	Strict    bool             `yaml:"strict"`
+}
+
+type MemcachedConfig struct {
+	Address    string `yaml:"address"`
+	Expiration int32  `yaml:"expiration"`
 }
 
 var config Config
@@ -37,6 +43,7 @@ func LoadConfig(path string, strict bool) error {
 	return nil
 }
 
+// IgnoreVulnerability tells if we should ignore given vulnerability
 func (c *Config) IgnoreVulnerability(id string) bool {
 	for _, ignore := range c.Ignore {
 		if ignore == id {
