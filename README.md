@@ -36,6 +36,8 @@ You can pass *-verbose* option on command line to print vulnerability report, ev
 
 You can set *-strict* flag on command line so that vulnerabilities without version are considered matching vulnerability. In this case, you should check vulnerability manually and disable it in configuration file if necessary.
 
+You can pass more than one binary on command line. In this case, there will be cache on calls to NVD database.
+
 ## Configuration
 
 You can pass configuration on command line with `-config` option:
