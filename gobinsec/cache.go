@@ -15,7 +15,7 @@ func NewVulnerabilityCache() *VulnerabilityCache {
 }
 
 func (dc *VulnerabilityCache) Get(d *Dependency) []Vulnerability {
-	key := d.Hash()
+	key := d.Key()
 	lock.RLock()
 	defer lock.RUnlock()
 	vulnerabilities, ok := (*dc)[key]
@@ -26,7 +26,7 @@ func (dc *VulnerabilityCache) Get(d *Dependency) []Vulnerability {
 }
 
 func (dc *VulnerabilityCache) Put(d *Dependency, v []Vulnerability) {
-	key := d.Hash()
+	key := d.Key()
 	if v == nil {
 		v = make([]Vulnerability, 0)
 	}

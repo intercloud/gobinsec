@@ -67,7 +67,7 @@ func (d *Dependency) LoadVulnerabilities() error {
 	return nil
 }
 
-// Hash returns a hash as a string for caching
-func (d *Dependency) Hash() string {
-	return d.Name + "/" + d.Version.String()
+// Key returns a key as a string for caching
+func (d *Dependency) Key() string {
+	return d.Name + "#" + d.Version.String()
 }
