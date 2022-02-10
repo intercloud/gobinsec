@@ -38,7 +38,7 @@ func main() {
 		binary, err := gobinsec.NewBinary(path)
 		if err != nil {
 			gobinsec.ColorRed.Print("ERROR")
-			fmt.Printf("analyzing %s: %v\n", path, err)
+			fmt.Printf(" analyzing %s: %v\n", path, err)
 			issue = true
 		} else {
 			binary.Report(*verbose)
