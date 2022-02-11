@@ -25,22 +25,29 @@ func main() {
 		fmt.Println(Version)
 		os.Exit(0)
 	}
-	if len(flag.Args()) != 1 {
-		println("ERROR you must pass one binary to analyze")
+	if len(flag.Args()) < 1 {
+		println("ERROR you must pass binary/ies to analyze on command line")
 		os.Exit(CodeError)
 	}
 	if err := gobinsec.LoadConfig(*config, *strict); err != nil {
-		println(fmt.Sprintf("ERROR loading configuration: %v", err))
+		println(fmt.Sprintf("ERROR %v", err))
 		os.Exit(CodeError)
 	}
-	path := flag.Args()[0]
-	binary, err := gobinsec.NewBinary(path)
-	if err != nil {
-		println(fmt.Sprintf("ERROR analyzing %s: %v", path, err))
-		os.Exit(CodeError)
+	issue := false
+	for _, path := range flag.Args() {
+		binary, err := gobinsec.NewBinary(path)
+		if err != nil {
+			gobinsec.ColorRed.Print("ERROR")
+			fmt.Printf(" analyzing %s: %v\n", path, err)
+			issue = true
+		} else {
+			binary.Report(*verbose)
+			if binary.Vulnerable {
+				issue = true
+			}
+		}
 	}
-	binary.Report(*verbose)
-	if binary.Vulnerable {
+	if issue {
 		os.Exit(CodeVulnerable)
 	}
 }

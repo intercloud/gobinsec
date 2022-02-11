@@ -31,6 +31,11 @@ func NewDependency(name, version string) (*Dependency, error) {
 
 // Vulnerabilities return list of vulnerabilities for given dependency
 func (d *Dependency) LoadVulnerabilities() error {
+	vulnerabilities := cache.Get(d)
+	if vulnerabilities != nil {
+		d.Vulnerabilities = vulnerabilities
+		return nil
+	}
 	url := URL + d.Name
 	if config.APIKey != "" {
 		url += "&apiKey=" + config.APIKey
@@ -58,5 +63,11 @@ func (d *Dependency) LoadVulnerabilities() error {
 		}
 		d.Vulnerabilities = append(d.Vulnerabilities, *vulnerability)
 	}
+	cache.Put(d, d.Vulnerabilities)
 	return nil
+}
+
+// Key returns a key as a string for caching
+func (d *Dependency) Key() string {
+	return d.Name
 }

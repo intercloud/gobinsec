@@ -105,8 +105,12 @@ func LoadVulnerabilities(dependencies chan *Dependency, wg *sync.WaitGroup) {
 // Report prints a report on terminal
 // nolint:gocyclo // this is life
 func (b *Binary) Report(verbose bool) {
-	fmt.Printf("binary: '%s'\n", filepath.Base(b.Path))
-	fmt.Printf("vulnerable: %t\n", b.Vulnerable)
+	fmt.Printf("%s: ",filepath.Base(b.Path))
+	if (b.Vulnerable) {
+		ColorRed.Println("VULNERABLE")
+	} else {
+		ColorGreen.Println("OK")
+	}
 	if len(b.Dependencies) > 0 && (b.Vulnerable || verbose) {
 		fmt.Println("dependencies:")
 		for _, dependency := range b.Dependencies {
