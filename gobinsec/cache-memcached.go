@@ -33,7 +33,7 @@ func (mc *MemcachedClient) Set(d *Dependency, v []byte) {
 		Value:      v,
 		Expiration: mc.Expiration,
 	}
-	_ = mc.Client.Set(&item) // we ignore error
+	mc.Client.Set(&item) // nolint:errcheck // we ignore error
 }
 
 // Ping calls memcached
