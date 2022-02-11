@@ -3,7 +3,7 @@
 This tool parses Go binary dependencies, calls NVD database to produce a vulnerability report for this binary.
 
 <details>
-<summary><bold>Table of Contents</bold></summary>
+<summary><font size="+1">Table of Contents</font></summary>
 
 - [Installation](#installation)
 - [Usage](#usage)
