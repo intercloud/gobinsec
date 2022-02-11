@@ -1,6 +1,6 @@
 # Gobinsec
 
-This tool parses Go binary dependencies, calls NVD database to produce a vulnerability report for this binary.
+This tool parses Go binary dependencies, calls NVD database to produce a vulnerability report.
 
 ## Table of Contents
 
