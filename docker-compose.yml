@@ -1,0 +1,7 @@
+services:
+
+  memcached:
+    image: memcached:1.6.13
+    restart: unless-stopped
+    ports:
+    - 11211:11211

@@ -1,8 +1,19 @@
 # Gobinsec
 
-This tool parses Go binary dependencies, calls NVD database to produce a vulnerability report for this binary.
+This tool parses Go binary dependencies and calls [NVD database](https://nvd.nist.gov/) to produce a vulnerability report.
 
-## Install
+## Table of Contents
+
+1. [Installation](#installation)
+2. [Usage](#usage)
+3. [Configuration](#configuration)
+4. [Cache](#cache)
+5. [Version](#versions)
+6. [How to Fix Vulnerabilities](#how-to-fix-vulnerabilities)
+7. [Data Source](#data-source)
+8. [License](#license)
+
+## Installation
 
 Download binary for your platform in [latest release](https://github.com/intercloud/gobinsec/releases). Rename it *gobinsec*, make it executable with `chmod +x gobinsec` and move it somewhere in your *PATH*.
 
@@ -30,13 +41,15 @@ dependencies:
     - '?'
 ```
 
-Exit code is *1* if binary is vulnerable, *2* if there was an error analyzing binary and *0* otherwise. If binary is vulnerable, exposed vulnerabilities are printed in report.
+You can pass more than one binary to check on command line.
+
+Exit code is *1* if exposed vulnerabilities were found, *2* if there was an error analyzing a binary and *0* otherwise. If a binary is vulnerable, exposed vulnerabilities are printed in report.
 
 You can pass *-verbose* option on command line to print vulnerability report, even if binary is not vulnerable and for all vulnerabilities, even if they are ignored or not exposed.
 
 You can set *-strict* flag on command line so that vulnerabilities without version are considered matching vulnerability. In this case, you should check vulnerability manually and disable it in configuration file if necessary.
 
-You can pass more than one binary on command line. In this case, there will be cache on calls to NVD database.
+You can pass configuration file with *-config config.yml*, see configuration section below.
 
 ## Configuration
 
@@ -51,19 +64,29 @@ Configuration file is in YAML format as follows:
 ```yaml
 api-key: "28c6112c-a7bc-4a4e-9b14-75be6da02211"
 strict: false
+memcached:
+  address:    127.0.0.1:11211
+  expiration: 86400
 ignore:
 - "CVE-2020-14040"
 ```
 
-It has two entries:
+Configuration fields are the following:
 
 - **api-key**: this is your NVD API key
 - **strict**: tells if we should consider vulnerability matches without version as matching dependency
+- **memcached** is the configuration for *memcached*, with **address** and **expiration** time in seconds
 - **ignore**: a list of CVE vulnerabilities to ignore
 
 You can also set NVD API Key in your environment with variable *NVD_API_KEY*. This key may be overwritten with value in configuration file. Your API key must be set in environment to be able to run integration tests (with target *integ*).
 
 Note that without API key, you will be limited to *10* requests in a rolling *60* second window while this limit is *100* with an API key.
+
+## Cache
+
+If you define the *memcached* configuration in your configuration file, *memcached* will be used to cache calls to NVD database. This is useful because if you perform more call that allowed, your calls will significantly slow down. An sample [docker-compose.yml](https://github.com/intercloud/gobinsec/blob/main/docker-compose.yml) to start a *memcached* instance is proposed in this project.
+
+If you don't define the *memcached* configuration, the program will use a memory cache when you pass more than one binary to analyse on command line.
 
 ## Versions
 

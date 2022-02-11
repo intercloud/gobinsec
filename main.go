@@ -33,6 +33,10 @@ func main() {
 		println(fmt.Sprintf("ERROR %v", err))
 		os.Exit(CodeError)
 	}
+	if err := gobinsec.BuildCache(); err != nil {
+		println(fmt.Sprintf("ERROR building cache: %v", err))
+		os.Exit(CodeError)
+	}
 	issue := false
 	for _, path := range flag.Args() {
 		binary, err := gobinsec.NewBinary(path)
