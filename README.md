@@ -8,6 +8,9 @@ This tool parses Go binary dependencies and calls [NVD database](https://nvd.nis
 2. [Usage](#usage)
 3. [Configuration](#configuration)
 4. [Cache](#cache)
+    - [Memcachier](#memcachier)
+    - [Memcached](#memcached)
+    - [Memory](#memory)
 5. [Version](#versions)
 6. [How to Fix Vulnerabilities](#how-to-fix-vulnerabilities)
 7. [Data Source](#data-source)
@@ -46,7 +49,7 @@ Exit code is *1* if exposed vulnerabilities were found, *2* if there was an erro
 
 You can pass *-verbose* option on command line to print vulnerability report, even if binary is not vulnerable and for all vulnerabilities, even if they are ignored or not exposed.
 
-You can set *-strict* flag on command line so that vulnerabilities without version are considered matching vulnerability. In this case, you should check vulnerability manually and disable it in configuration file if necessary.
+You can set *-strict* flag on command line so that vulnerabilities without version are considered matching dependency version. In this case, you should check vulnerability manually and disable it in configuration file if necessary.
 
 You can pass configuration file with *-config config.yml*, see configuration section below.
 
@@ -63,6 +66,11 @@ Configuration file is in YAML format as follows:
 ```yaml
 api-key: "28c6112c-a7bc-4a4e-9b14-75be6da02211"
 strict: false
+memcachier:
+  address:    mcx.cy.eu-central-1.ec2.memcachier.com:11211
+  expiration: 86400
+  username:   foo
+  password:   bar
 memcached:
   address:    127.0.0.1:11211
   expiration: 86400
@@ -74,6 +82,7 @@ Configuration fields are the following:
 
 - **api-key**: this is your NVD API key
 - **strict**: tells if we should consider vulnerability matches without version as matching dependency
+- **memcachier** is the configuration for *memcachier*, with **address**, **expiration** (time in seconds), **username** and **password**
 - **memcached** is the configuration for *memcached*, with **address** and **expiration** time in seconds
 - **ignore**: a list of CVE vulnerabilities to ignore
 
@@ -83,9 +92,53 @@ Note that without API key, you will be limited to *10* requests in a rolling *60
 
 ## Cache
 
-If you define the *memcached* configuration in your configuration file, *memcached* will be used to cache calls to NVD database. This is useful because if you perform more call that allowed, your calls will significantly slow down. An sample [docker-compose.yml](https://github.com/intercloud/gobinsec/blob/main/docker-compose.yml) to start a *memcached* instance is proposed in this project.
+A cache is useful because if you perform more call to NVD database that allowed, your calls will significantly slow down. Gobinsec tries to build caches in this order:
 
-If you don't define the *memcached* configuration, the program will use a memory cache when you pass more than one binary to analyse on command line.
+### Memcachier
+
+A cache is built with *Memcachier* if following section is found in configuration file:
+
+```yaml
+memcachier:
+  address:    ...
+  expiration: ...
+  username:   ...
+  password:   ...
+```
+
+Else, il will look for following environment variables:
+
+```
+MEMCACHIER_ADDRESS
+MEMCACHIER_EXPIRATION
+MEMCACHIER_USERNAME
+MEMCACHIER_PASSWORD
+```
+
+[Memcachier](https://www.memcachier.com) is an online cache provider with free tiers.
+
+### Memcached
+
+If no configuration is found for *Memcachier*, it will try to build a cache for *Memcached*, if following section is found in configuration file:
+
+```yaml
+memcached:
+  address:    ...
+  expiration: ...
+```
+
+Else it will look for following environment variables:
+
+```
+MEMCACHED_ADDRESS
+MEMCACHED_EXPIRATION
+```
+
+A sample [docker-compose.yml](https://github.com/intercloud/gobinsec/blob/main/docker-compose.yml) file to start a *memcached* instance is provided in this project.
+
+### Memory
+
+If no configuration is found for *Memcachier* and *Memcached*, it will instantiate a memory cache. This cache will be useful if you pass more than one binary on command line.
 
 ## Versions
 

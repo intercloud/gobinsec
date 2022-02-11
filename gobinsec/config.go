@@ -8,15 +8,11 @@ import (
 )
 
 type Config struct {
-	APIKey    string           `yaml:"api-key"`
-	Memcached *MemcachedConfig `yaml:"memcached"`
-	Ignore    []string         `yaml:"ignore"`
-	Strict    bool             `yaml:"strict"`
-}
-
-type MemcachedConfig struct {
-	Address    string `yaml:"address"`
-	Expiration int32  `yaml:"expiration"`
+	APIKey     string            `yaml:"api-key"`
+	Memcached  *MemcachedConfig  `yaml:"memcached"`
+	Memcachier *MemcachierConfig `yaml:"memcachier"`
+	Ignore     []string          `yaml:"ignore"`
+	Strict     bool              `yaml:"strict"`
 }
 
 var config Config
