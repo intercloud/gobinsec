@@ -21,7 +21,7 @@ func NewMemcachedConfig(config *MemcachedConfig) *MemcachedConfig {
 		return config
 	} else if os.Getenv("MEMCACHED_ADDRESS") != "" {
 		address = os.Getenv("MEMCACHED_ADDRESS")
-		exp, err := strconv.Atoi(os.Getenv("MEMCACHED_EXPIRATION"))
+		exp, err := strconv.Atoi(os.Getenv("MEMCACHED_EXPIRATION")) // nolint:gosec // no overflow possible
 		if err != nil {
 			return nil
 		}

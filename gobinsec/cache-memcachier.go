@@ -31,7 +31,7 @@ func NewMemcachierConfig(config *MemcachierConfig) *MemcachierConfig {
 		username = os.Getenv("MEMCACHIER_USERNAME")
 		password = os.Getenv("MEMCACHIER_PASSWORD")
 		address = os.Getenv("MEMCACHIER_ADDRESS")
-		exp, err := strconv.Atoi(os.Getenv("MEMCACHIER_EXPIRATION"))
+		exp, err := strconv.Atoi(os.Getenv("MEMCACHIER_EXPIRATION")) // nolint:gosec // no overflow possible
 		if err != nil {
 			return nil
 		}
