@@ -1,6 +1,39 @@
 package gobinsec
 
-import "github.com/bradfitz/gomemcache/memcache"
+import (
+	"os"
+	"strconv"
+
+	"github.com/bradfitz/gomemcache/memcache"
+)
+
+// MemcachedConfig is the configuration for memcached
+type MemcachedConfig struct {
+	Address    string `yaml:"address"`
+	Expiration int32  `yaml:"expiration"`
+}
+
+// NewMemcachedConfig returns configuration
+func NewMemcachedConfig(config *MemcachedConfig) *MemcachedConfig {
+	var address string
+	var expiration int32
+	if config != nil {
+		return config
+	} else if os.Getenv("MEMCACHED_ADDRESS") != "" {
+		address = os.Getenv("MEMCACHED_ADDRESS")
+		exp, err := strconv.Atoi(os.Getenv("MEMCACHED_EXPIRATION"))
+		if err != nil {
+			return nil
+		}
+		expiration = int32(exp)
+		return &MemcachedConfig{
+			Address:    address,
+			Expiration: expiration,
+		}
+	} else {
+		return nil
+	}
+}
 
 // MemcachedClient is the Cache using memcached
 type MemcachedClient struct {
@@ -9,10 +42,10 @@ type MemcachedClient struct {
 }
 
 // NewMemcachedCache builds a memcached cache
-func NewMemcachedCache() Cache {
+func NewMemcachedCache(config *MemcachedConfig) Cache {
 	cache := MemcachedClient{
-		Client:     memcache.New(config.Memcached.Address),
-		Expiration: config.Memcached.Expiration,
+		Client:     memcache.New(config.Address),
+		Expiration: config.Expiration,
 	}
 	return &cache
 }
