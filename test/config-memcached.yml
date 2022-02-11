@@ -2,5 +2,7 @@ api-key:   "${NVD_API_KEY}"
 memcached:
   address:    127.0.0.1:11211
   expiration: 86400
+  username:
+  password:   
 ignore:
 - "CVE-2020-14040"

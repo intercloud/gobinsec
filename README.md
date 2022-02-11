@@ -23,8 +23,7 @@ To analyze given binary:
 
 ```yaml
 $ gobinsec path/to/binary
-binary: 'binary'
-vulnerable: true
+binary: VULNERABLE
 dependencies:
 - name:    'golang.org/x/text'
   version: 'v0.3.0'
