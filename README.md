@@ -84,7 +84,7 @@ Note that without API key, you will be limited to *10* requests in a rolling *60
 
 ## Cache
 
-If you define the *memcached* configuration in your configuration file, *memcached* will be used to cache calls to NVD database. This is useful because if you perform more call that allowed, your calls will significantly slow down. An sample *docker-compose.yml* to start a *memcached* instance is proposed in this project.
+If you define the *memcached* configuration in your configuration file, *memcached* will be used to cache calls to NVD database. This is useful because if you perform more call that allowed, your calls will significantly slow down. An sample [docker-compose.yml](https://github.com/intercloud/gobinsec/blob/main/docker-compose.yml) to start a *memcached* instance is proposed in this project.
 
 If you don't define the *memcached* configuration, the program will use a memory cache when you pass more than one binary to analyse on command line.
 
