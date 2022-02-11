@@ -5,12 +5,14 @@ This tool parses Go binary dependencies, calls NVD database to produce a vulnera
 <details>
 Table of Contents
 <summary>
-1. [Installation](#installation)
-2. [Usage](#usage)
-3. [Configuration](#configuration)
-4. [Cache](#cache)
-5. [Version](#versions)
-6. [How to Fix Vulnerabilities](#how-to-fix-vulnerabilities)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Cache](#cache)
+- [Version](#versions)
+- [How to Fix Vulnerabilities](#how-to-fix-vulnerabilities)
+- [Data Source](#data-source)
+- [License](#license)
 </summary>
 </details>
 
