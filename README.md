@@ -94,6 +94,25 @@ Note that without API key, you will be limited to *10* requests in a rolling *60
 
 A cache is useful because if you perform more call to NVD database that allowed, your calls will significantly slow down. Gobinsec tries to build caches in this order:
 
+### Memcached
+
+If no configuration is found for *Memcachier*, it will try to build a cache for *Memcached*, if following section is found in configuration file:
+
+```yaml
+memcached:
+  address:    ...
+  expiration: ...
+```
+
+Else it will look for following environment variables:
+
+```
+MEMCACHED_ADDRESS
+MEMCACHED_EXPIRATION
+```
+
+A sample [docker-compose.yml](https://github.com/intercloud/gobinsec/blob/main/docker-compose.yml) file to start a *memcached* instance is provided in this project.
+
 ### Memcachier
 
 A cache is built with *Memcachier* if following section is found in configuration file:
@@ -116,25 +135,6 @@ MEMCACHIER_PASSWORD
 ```
 
 [Memcachier](https://www.memcachier.com) is an online cache provider with free tiers.
-
-### Memcached
-
-If no configuration is found for *Memcachier*, it will try to build a cache for *Memcached*, if following section is found in configuration file:
-
-```yaml
-memcached:
-  address:    ...
-  expiration: ...
-```
-
-Else it will look for following environment variables:
-
-```
-MEMCACHED_ADDRESS
-MEMCACHED_EXPIRATION
-```
-
-A sample [docker-compose.yml](https://github.com/intercloud/gobinsec/blob/main/docker-compose.yml) file to start a *memcached* instance is provided in this project.
 
 ### Memory
 
