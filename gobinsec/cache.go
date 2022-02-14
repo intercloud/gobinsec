@@ -9,10 +9,10 @@ type Cache interface {
 }
 
 func BuildCache() error {
-	if conf := NewMemcachierConfig(config.Memcachier); conf != nil {
-		cache = NewMemcachierCache(conf)
-	} else if conf := NewMemcachedConfig(config.Memcached); conf != nil {
+	if conf := NewMemcachedConfig(config.Memcached); conf != nil {
 		cache = NewMemcachedCache(conf)
+	} else if conf := NewMemcachierConfig(config.Memcachier); conf != nil {
+		cache = NewMemcachierCache(conf)
 	} else {
 		cache = NewMemoryCache()
 	}
