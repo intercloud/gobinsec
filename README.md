@@ -11,10 +11,11 @@ This tool parses Go binary dependencies and calls [NVD database](https://nvd.nis
     - [Memcachier](#memcachier)
     - [Memcached](#memcached)
     - [Memory](#memory)
-5. [Version](#versions)
+5. [Versions](#versions)
 6. [How to Fix Vulnerabilities](#how-to-fix-vulnerabilities)
-7. [Data Source](#data-source)
-8. [License](#license)
+7. [Information about vulnerabilities](#information-about-vulnerabilities)
+8. [How Gobinsec works](#how-gobinsec-works)
+9. [License](#license)
 
 ## Installation
 
