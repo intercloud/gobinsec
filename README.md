@@ -176,11 +176,20 @@ $ go get -u golang.org/x/crypto
 $ go mod tidy
 ```
 
-Of course this is possible only if a version that fixes the issue was released.
+Of course this is possible only if a fix was written and committed to fix the issue.
 
-The best way to receive security announcements is to subscribe to the [golang-announce mailing list](https://groups.google.com/g/golang-announce). Any messages pertaining to a security issue will be prefixed with `[security]`.
+## Information about vulnerabilities
 
-## Data source
+The best way to receive security announcements is to subscribe to the [golang-announce mailing list](https://groups.google.com/g/golang-announce). Any messages pertaining to a security issue will be prefixed with `[security]`. See the page about the [Go Security Policy](https://go.dev/security) for details about the process of vulnerability management.
+
+Here is a list of sites where you can find information about vulnerabilities:
+
+- [National Vulnerability Database](https://nvd.nist.gov/) lists vulnerabilities and provides an API to search them. See hereafter for details about querying the API.
+- [https://cve.mitre.org/](https://cve.mitre.org/) provides a page to search CVE at <https://cve.mitre.org/cve/search_cve_list.html>. Note that this site is currently moving to <https://www.cve.org/>.
+- [CVE Details](https://www.cvedetails.com/) also lists CVE vulnerabilities and hosts a page dedicated to Go at <<ttps://www.cvedetails.com/vulnerability-list/vendor_id-14185/Golang.html>.
+- Other sources for CVE vulnerabilities: <<ttps://www.circl.lu/services/cve-search/> and <https://www.cve-search.org/>.
+
+## How Gobinsec works
 
 This tool first lists dependencies embedded in binary with `go version -m binary` command:
 
