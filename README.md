@@ -186,8 +186,8 @@ Here is a list of sites where you can find information about vulnerabilities:
 
 - [National Vulnerability Database](https://nvd.nist.gov/) lists vulnerabilities and provides an API to search them. See hereafter for details about querying the API.
 - [https://cve.mitre.org/](https://cve.mitre.org/) provides a page to search CVE at <https://cve.mitre.org/cve/search_cve_list.html>. Note that this site is currently moving to <https://www.cve.org/>.
-- [CVE Details](https://www.cvedetails.com/) also lists CVE vulnerabilities and hosts a page dedicated to Go at <<ttps://www.cvedetails.com/vulnerability-list/vendor_id-14185/Golang.html>.
-- Other sources for CVE vulnerabilities: <<ttps://www.circl.lu/services/cve-search/> and <https://www.cve-search.org/>.
+- [CVE Details](https://www.cvedetails.com/) also lists CVE vulnerabilities and hosts a page dedicated to Go at <https://www.cvedetails.com/vulnerability-list/vendor_id-14185/Golang.html>.
+- Other sources for CVE vulnerabilities: <https://www.circl.lu/services/cve-search/> and <https://www.cve-search.org/>.
 
 ## How Gobinsec works
 
