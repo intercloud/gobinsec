@@ -178,6 +178,8 @@ $ go mod tidy
 
 Of course this is possible only if a version that fixes the issue was released.
 
+The best way to receive security announcements is to subscribe to the [golang-announce mailing list](https://groups.google.com/g/golang-announce). Any messages pertaining to a security issue will be prefixed with `[security]`.
+
 ## Data source
 
 This tool first lists dependencies embedded in binary with `go version -m binary` command:
