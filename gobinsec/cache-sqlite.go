@@ -82,7 +82,7 @@ func (sc *SQLiteCache) Ping() error {
 func (sc *SQLiteCache) Clean() {
 	err := sc.CleanTable()
 	if err != nil {
-		fmt.Printf("ERROR cleaning dependency: %v\n", err)
+		fmt.Printf("ERROR cleaning dependencies: %v\n", err)
 	}
 }
 
