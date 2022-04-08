@@ -51,6 +51,7 @@ func main() {
 			}
 		}
 	}
+	gobinsec.CacheInstance.Clean()
 	if issue {
 		os.Exit(CodeVulnerable)
 	}

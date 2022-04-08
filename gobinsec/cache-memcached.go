@@ -73,3 +73,7 @@ func (mc *MemcachedClient) Set(d *Dependency, v []byte) {
 func (mc *MemcachedClient) Ping() error {
 	return mc.Client.Ping()
 }
+
+// Clean does nothing
+func (mc *MemcachedClient) Clean() {
+}
