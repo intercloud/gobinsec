@@ -38,6 +38,7 @@ func NewSQLiteConfig(config *SQLiteConfig) *SQLiteConfig {
 	return config
 }
 
+// SQLiteCache is the cache instance
 type SQLiteCache struct {
 	Expiration int32
 	Database   *sql.DB
