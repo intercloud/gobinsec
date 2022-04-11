@@ -10,7 +10,7 @@ This tool parses Go binary dependencies and calls [NVD database](https://nvd.nis
 4. [Cache](#cache)
     - [Memcachier](#memcachier)
     - [Memcached](#memcached)
-    - [Memory](#memory)
+    - [SQLite](#sqlite)
 5. [Versions](#versions)
 6. [How to Fix Vulnerabilities](#how-to-fix-vulnerabilities)
 7. [Information about vulnerabilities](#information-about-vulnerabilities)
@@ -93,11 +93,11 @@ Note that without API key, you will be limited to *10* requests in a rolling *60
 
 ## Cache
 
-A cache is useful because if you perform more call to NVD database that allowed, your calls will significantly slow down. Gobinsec tries to build caches in this order:
+A cache is useful because if you perform more call to NVD database than allowed, your calls will significantly slow down. Gobinsec tries to build caches in this order:
 
 ### Memcached
 
-If no configuration is found for *Memcachier*, it will try to build a cache for *Memcached*, if following section is found in configuration file:
+A cache is built with *Memcached* if following section is found in configuration file:
 
 ```yaml
 memcached:
@@ -137,9 +137,15 @@ MEMCACHIER_PASSWORD
 
 [Memcachier](https://www.memcachier.com) is an online cache provider with free tiers.
 
-### Memory
+### SQLite
 
-If no configuration is found for *Memcachier* and *Memcached*, it will instantiate a memory cache. This cache will be useful if you pass more than one binary on command line.
+If none of preceding configuration is found in configuration and none of related environment variables, *Gobinsec* will use *SQLite* for caching. By default, database file is stored in *~/.gobinsec.db* and cache duration is of one day (or *86400* seconds). You can overwrite these default values with following configuration section:
+
+```yaml
+sqlite:
+  file:       "/path/to/database.db"
+  expiration: 86400
+```
 
 ## Versions
 

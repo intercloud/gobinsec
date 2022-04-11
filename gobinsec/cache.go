@@ -1,20 +1,22 @@
 package gobinsec
 
-var cache Cache
+var CacheInstance Cache
 
 type Cache interface {
 	Get(d *Dependency) []byte
 	Set(d *Dependency, v []byte)
 	Ping() error
+	Clean()
 }
 
 func BuildCache() error {
 	if conf := NewMemcachedConfig(config.Memcached); conf != nil {
-		cache = NewMemcachedCache(conf)
+		CacheInstance = NewMemcachedCache(conf)
 	} else if conf := NewMemcachierConfig(config.Memcachier); conf != nil {
-		cache = NewMemcachierCache(conf)
+		CacheInstance = NewMemcachierCache(conf)
 	} else {
-		cache = NewMemoryCache()
+		conf := NewSQLiteConfig(config.SQLite)
+		CacheInstance = NewSQLiteCache(conf)
 	}
-	return cache.Ping()
+	return CacheInstance.Ping()
 }

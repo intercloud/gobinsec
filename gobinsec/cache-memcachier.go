@@ -86,3 +86,7 @@ func (mc *MemcachierClient) Ping() error {
 	}
 	return mc.Client.Set(&item)
 }
+
+// Clean does nothing
+func (mc *MemcachierClient) Clean() {
+}

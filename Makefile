@@ -23,6 +23,7 @@ build: # Build binary
 	@mkdir -p $(BUILD_DIR)
 	@go build -ldflags "-X main.Version=$(VERSION) -s -f" -o $(BUILD_DIR)/ ./...
 
+.PHONY: install
 install: # Build and install tool
 	@go install .
 
