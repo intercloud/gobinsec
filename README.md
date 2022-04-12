@@ -21,6 +21,12 @@ This tool parses Go binary dependencies and calls [NVD database](https://nvd.nis
 
 Download binary for your platform in [latest release](https://github.com/intercloud/gobinsec/releases). Rename it *gobinsec*, make it executable with `chmod +x gobinsec` and move it somewhere in your *PATH*.
 
+If Go is already installed on your machine, you can also build and install it in your *GOPATH* with:
+
+```
+$ go install github.com/intercloud/gobinsec@latest
+```
+
 ## Usage
 
 To analyze given binary:
