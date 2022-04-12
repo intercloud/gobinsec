@@ -39,7 +39,6 @@ $ go install github.com/intercloud/gobinsec@latest
 
 Finally, you can download binary for your platform in [latest release](https://github.com/intercloud/gobinsec/releases). Rename it *gobinsec*, make it executable with `chmod +x gobinsec` and move it somewhere in your *PATH*.
 
-
 ## Usage
 
 To analyze given binary:
