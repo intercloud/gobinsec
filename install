@@ -47,7 +47,7 @@ fi
 # select command to download binary
 if hash curl 2>/dev/null
 then
-    command="curl -o"
+    command="curl -L -o"
 elif hash wget 2>/dev/null
 then
     command="wget -O"
