@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env sh
 #
 # Installation script for Unix platforms. To run installation, type :
 #
-# $ sh -c "$(curl https://github.com/intercloud/gobinsec/releases/latest/download/install)"
+# $ sh -c "$(curl -L https://github.com/intercloud/gobinsec/releases/latest/download/install)"
 #
 # or (if you don't have curl installed):
 #
