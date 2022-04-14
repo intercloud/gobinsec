@@ -39,6 +39,7 @@ binaries: # Generate binaries
 	$(title)
 	@mkdir -p $(BUILD_DIR)/bin
 	@gox -ldflags "-X main.Version=$(VERSION) -s -f" -osarch '$(GOOSARCH)' -output=$(BUILD_DIR)/bin/{{.Dir}}-{{.OS}}-{{.Arch}} $(GOPACKAGE)
+	@cp install $(BUILD_DIR)/bin/
 
 release: clean lint test integ binaries # Perform release (must pass VERSION=X.Y.Z on command line)
 	@if [ "$(VERSION)" = "UNKNOWN" ]; then \
