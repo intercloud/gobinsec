@@ -10,7 +10,7 @@ This tool parses Go binary dependencies and calls [NVD database](https://nvd.nis
 4. [Cache](#cache)
     - [Memcachier](#memcachier)
     - [Memcached](#memcached)
-    - [SQLite](#sqlite)
+    - [File](#file)
 5. [Versions](#versions)
 6. [How to Fix Vulnerabilities](#how-to-fix-vulnerabilities)
 7. [Information about vulnerabilities](#information-about-vulnerabilities)
@@ -93,6 +93,9 @@ memcachier:
 memcached:
   address:    127.0.0.1:11211
   expiration: 86400
+file:
+  name:       ~/.gobinsec-cache.yml
+  expiration: 86400
 ignore:
 - "CVE-2020-14040"
 ```
@@ -103,6 +106,7 @@ Configuration fields are the following:
 - **strict**: tells if we should consider vulnerability matches without version as matching dependency
 - **memcachier** is the configuration for *memcachier*, with **address**, **expiration** (time in seconds), **username** and **password**
 - **memcached** is the configuration for *memcached*, with **address** and **expiration** time in seconds
+- **file** is the configuration for *file* cache, with **name** and **expiration** time in seconds
 - **ignore**: a list of CVE vulnerabilities to ignore
 
 You can also set NVD API Key in your environment with variable *NVD_API_KEY*. This key may be overwritten with value in configuration file. Your API key must be set in environment to be able to run integration tests (with target *integ*).
@@ -112,25 +116,6 @@ Note that without API key, you will be limited to *10* requests in a rolling *60
 ## Cache
 
 A cache is useful because if you perform more call to NVD database than allowed, your calls will significantly slow down. Gobinsec tries to build caches in this order:
-
-### Memcached
-
-A cache is built with *Memcached* if following section is found in configuration file:
-
-```yaml
-memcached:
-  address:    ...
-  expiration: ...
-```
-
-Else it will look for following environment variables:
-
-```
-MEMCACHED_ADDRESS
-MEMCACHED_EXPIRATION
-```
-
-A sample [docker-compose.yml](https://github.com/intercloud/gobinsec/blob/main/docker-compose.yml) file to start a *memcached* instance is provided in this project.
 
 ### Memcachier
 
@@ -155,13 +140,32 @@ MEMCACHIER_PASSWORD
 
 [Memcachier](https://www.memcachier.com) is an online cache provider with free tiers.
 
-### SQLite
+### Memcached
 
-If none of preceding configuration is found in configuration and none of related environment variables, *Gobinsec* will use *SQLite* for caching. By default, database file is stored in *~/.gobinsec.db* and cache duration is of one day (or *86400* seconds). You can overwrite these default values with following configuration section:
+A cache is built with *Memcached* if following section is found in configuration file:
 
 ```yaml
-sqlite:
-  file:       "/path/to/database.db"
+memcached:
+  address:    ...
+  expiration: ...
+```
+
+Else it will look for following environment variables:
+
+```
+MEMCACHED_ADDRESS
+MEMCACHED_EXPIRATION
+```
+
+A sample [docker-compose.yml](https://github.com/intercloud/gobinsec/blob/main/docker-compose.yml) file to start a *memcached* instance is provided in this project.
+
+### File
+
+If none of preceding configuration is found in configuration and none of related environment variables, *Gobinsec* will use *YAML* file for caching. By default, database file is stored in *~/.gobinsec-cache.yml* and cache duration is of one day (or *86400* seconds). You can overwrite these default values with following configuration section:
+
+```yaml
+file:
+  name:       "/path/to/file.yml"
   expiration: 86400
 ```
 
