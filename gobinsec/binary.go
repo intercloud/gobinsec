@@ -1,13 +1,13 @@
 package gobinsec
 
 import (
+	"debug/buildinfo"
 	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
 	"sync"
-	"debug/buildinfo"
 )
 
 const (
