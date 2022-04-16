@@ -7,6 +7,7 @@ import (
 	"runtime"
 	"strings"
 	"sync"
+	"debug/buildinfo"
 )
 
 const (
@@ -38,31 +39,14 @@ func NewBinary(path string) (*Binary, error) {
 	return &binary, nil
 }
 
-// GetDependencies gets dependencies analyzing binary
+// GetDependencies gets dependencies analyzing binary with buildinfo
 func (b *Binary) GetDependencies() error {
-	stdout, stderr, err := ExecCommand("go", "version", "-m", b.Path)
+	info, err := buildinfo.ReadFile(b.Path)
 	if err != nil {
 		return err
 	}
-	if stderr != "" {
-		return fmt.Errorf(stderr)
-	}
-	lines := strings.Split(stdout, "\n")
-	if len(lines) < MinimumBinaryLines {
-		return fmt.Errorf(stdout)
-	}
-	for _, line := range lines[3:] {
-		line = strings.TrimSpace(line)
-		if line == "" {
-			continue
-		}
-		parts := strings.Split(line, "\t")
-		if len(parts) < MinimumBinaryDependencyFields {
-			continue
-		}
-		name := parts[1]
-		version := parts[2]
-		dependency, err := NewDependency(name, version)
+	for _, dep := range info.Deps {
+		dependency, err := NewDependency(dep.Path, dep.Version)
 		if err != nil {
 			return err
 		}
