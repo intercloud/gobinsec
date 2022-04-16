@@ -45,11 +45,11 @@ func (b *Binary) GetDependencies() error {
 		return err
 	}
 	if stderr != "" {
-		return fmt.Errorf(stderr)
+		return fmt.Errorf("%s", stderr) // nolint:gocritic
 	}
 	lines := strings.Split(stdout, "\n")
 	if len(lines) < MinimumBinaryLines {
-		return fmt.Errorf(stdout)
+		return fmt.Errorf("%s", stdout)
 	}
 	for _, line := range lines[3:] {
 		line = strings.TrimSpace(line)

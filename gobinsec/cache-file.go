@@ -1,7 +1,6 @@
 package gobinsec
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -53,9 +52,11 @@ type FileCache struct {
 // NewFileCache builds a cache using file
 func NewFileCache(config *FileConfig) Cache {
 	cache := make(map[string]DependencyCache)
-	file, err := ioutil.ReadFile(config.File)
+	file, err := os.ReadFile(config.File)
 	if err == nil {
-		yaml.Unmarshal(file, cache)
+		if err := yaml.Unmarshal(file, cache); err != nil {
+			cache = make(map[string]DependencyCache)
+		}
 	}
 	fileCache := &FileCache{
 		File:       config.File,
@@ -94,7 +95,7 @@ func (fc *FileCache) Open() error {
 func (fc *FileCache) Close() {
 	text, err := yaml.Marshal(fc.Cache)
 	if err == nil {
-		ioutil.WriteFile(fc.File, text, 0644)
+		os.WriteFile(fc.File, text, 0644) // nolint:errcheck,gosec,gomnd // if error writing cache, do nothing
 	}
 }
 
