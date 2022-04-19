@@ -38,7 +38,7 @@ func (d *Dependency) LoadVulnerabilities() error {
 		if config.APIKey != "" {
 			url += "&apiKey=" + config.APIKey
 		}
-		response, err := http.Get(url) // nolint:noctx,gosec // it's safe!
+		response, err := http.Get(url) // nolint:gosec // it's safe!
 		if err != nil {
 			return fmt.Errorf("calling NVD: %v", err)
 		}
