@@ -70,10 +70,10 @@ func (mc *MemcachedClient) Set(d *Dependency, v []byte) {
 }
 
 // Ping calls memcached
-func (mc *MemcachedClient) Ping() error {
+func (mc *MemcachedClient) Open() error {
 	return mc.Client.Ping()
 }
 
 // Clean does nothing
-func (mc *MemcachedClient) Clean() {
+func (mc *MemcachedClient) Close() {
 }

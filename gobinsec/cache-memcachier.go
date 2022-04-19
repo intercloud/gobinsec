@@ -78,7 +78,7 @@ func (mc *MemcachierClient) Set(d *Dependency, v []byte) {
 }
 
 // Ping calls Memcachier
-func (mc *MemcachierClient) Ping() error {
+func (mc *MemcachierClient) Open() error {
 	item := memcache.Item{
 		Key:        "test",
 		Value:      []byte("test"),
@@ -88,5 +88,5 @@ func (mc *MemcachierClient) Ping() error {
 }
 
 // Clean does nothing
-func (mc *MemcachierClient) Clean() {
+func (mc *MemcachierClient) Close() {
 }

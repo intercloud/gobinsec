@@ -1,6 +1,6 @@
 api-key:   "${NVD_API_KEY}"
-sqlite:
-  file:       "~/.gobinsec.db"
+file:
+  name:       "~/.gobinsec-cache.yml"
   expiration: 86400
 ignore:
 - "CVE-2020-14040"

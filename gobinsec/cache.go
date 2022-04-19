@@ -5,18 +5,18 @@ var CacheInstance Cache
 type Cache interface {
 	Get(d *Dependency) []byte
 	Set(d *Dependency, v []byte)
-	Ping() error
-	Clean()
+	Open() error
+	Close()
 }
 
 func BuildCache() error {
-	if conf := NewMemcachedConfig(config.Memcached); conf != nil {
-		CacheInstance = NewMemcachedCache(conf)
-	} else if conf := NewMemcachierConfig(config.Memcachier); conf != nil {
+	if conf := NewMemcachierConfig(config.Memcachier); conf != nil {
 		CacheInstance = NewMemcachierCache(conf)
+	} else if conf := NewMemcachedConfig(config.Memcached); conf != nil {
+		CacheInstance = NewMemcachedCache(conf)
 	} else {
-		conf := NewSQLiteConfig(config.SQLite)
-		CacheInstance = NewSQLiteCache(conf)
+		conf := NewFileConfig(config.File)
+		CacheInstance = NewFileCache(conf)
 	}
-	return CacheInstance.Ping()
+	return CacheInstance.Open()
 }

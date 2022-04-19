@@ -11,7 +11,7 @@ type Config struct {
 	APIKey     string            `yaml:"api-key"`
 	Memcached  *MemcachedConfig  `yaml:"memcached"`
 	Memcachier *MemcachierConfig `yaml:"memcachier"`
-	SQLite     *SQLiteConfig     `yaml:"sqlite"`
+	File       *FileConfig       `yaml:"file"`
 	Ignore     []string          `yaml:"ignore"`
 	Strict     bool              `yaml:"strict"`
 }
