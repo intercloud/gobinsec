@@ -1,6 +1,6 @@
 # Gobinsec
 
-This tool parses Go binary dependencies and calls [NVD database](https://nvd.nist.gov/) to produce a vulnerability report.
+This tool parses Go binary dependencies and calls [NVD database](https://nvd.nist.gov/) to produce a vulnerability report. Binaries must have been built with module support to be analyzed with Gobinsec.
 
 ## Table of Contents
 
@@ -220,15 +220,7 @@ Here is a list of sites where you can find information about vulnerabilities:
 
 ## How Gobinsec works
 
-This tool first lists dependencies embedded in binary with `go version -m binary` command:
-
-```
-$ go version -m test/binary
-test/binary: go1.17.3
-	path	nancy-test
-	mod	nancy-test	(devel)
-	dep	golang.org/x/text	v0.3.0	h1:g61tztE5qeGQ89tm6NTjjM9VPIm088od1l6aSorWRWg=
-```
+This tool first lists dependencies embedded in binary using [buildinfo package](https://pkg.go.dev/debug/buildinfo).
 
 Then, it calls [National Vulnerability Database](https://nvd.nist.gov/) to lists known vulnerabilities for embedded dependencies. You can find documentation on its API at <https://nvd.nist.gov/developers/vulnerabilities> and get an API key here: <https://nvd.nist.gov/developers/request-an-api-key>.
 
