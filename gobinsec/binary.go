@@ -46,6 +46,9 @@ func (b *Binary) GetDependencies() error {
 		return err
 	}
 	for _, dep := range info.Deps {
+		for dep.Replace != nil {
+			dep = dep.Replace
+		}
 		dependency, err := NewDependency(dep.Path, dep.Version)
 		if err != nil {
 			return err
