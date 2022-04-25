@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"gopkg.in/yaml.v3"
@@ -49,6 +50,9 @@ type FileCache struct {
 	Cache      map[string]DependencyCache
 }
 
+// lock for memory cache
+var lock sync.RWMutex
+
 // NewFileCache builds a cache using file
 func NewFileCache(config *FileConfig) Cache {
 	cache := make(map[string]DependencyCache)
@@ -69,7 +73,10 @@ func NewFileCache(config *FileConfig) Cache {
 
 // Get returns NVD response for given dependency
 func (fc *FileCache) Get(d *Dependency) []byte {
-	dependency, ok := fc.Cache[d.Name]
+	key := d.Key()
+	lock.RLock()
+	defer lock.RUnlock()
+	dependency, ok := fc.Cache[key]
 	if ok {
 		return []byte(dependency.Vulnerabilities)
 	}
@@ -78,12 +85,15 @@ func (fc *FileCache) Get(d *Dependency) []byte {
 
 // Set put NVD response for given dependency in cache
 func (fc *FileCache) Set(d *Dependency, v []byte) {
+	key := d.Key()
+	lock.Lock()
+	defer lock.Unlock()
 	now := time.Now().UTC().Format("2006-01-02T15:04:05")
 	cache := DependencyCache{
 		Date:            now,
 		Vulnerabilities: string(v),
 	}
-	fc.Cache[d.Name] = cache
+	fc.Cache[key] = cache
 }
 
 // Ping does nothing
