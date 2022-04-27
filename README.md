@@ -23,19 +23,19 @@ This tool parses Go binary dependencies and calls [NVD database](https://nvd.nis
 To install Gobinsec, type following command:
 
 ```
-$ sh -c "$(curl -L https://github.com/intercloud/gobinsec/releases/latest/download/install)"
+sh -c "$(curl -L https://github.com/intercloud/gobinsec/releases/latest/download/install)"
 ```
 
 Or (if you don't have *curl* installed):
 
 ```
-$ sh -c "$(wget -O - https://github.com/intercloud/gobinsec/releases/latest/download/install)"
+sh -c "$(wget -O - https://github.com/intercloud/gobinsec/releases/latest/download/install)"
 ```
 
 Alternatively, if Go is already installed on your machine, you can also build and install latest version in your *GOPATH* with:
 
 ```
-$ go install github.com/intercloud/gobinsec@latest
+go install github.com/intercloud/gobinsec@latest
 ```
 
 Finally, you can download binary for your platform in [latest release](https://github.com/intercloud/gobinsec/releases). Rename it *gobinsec*, make it executable with `chmod +x gobinsec` and move it somewhere in your *PATH*.
