@@ -11,11 +11,12 @@ This tool parses Go binary dependencies and calls [NVD database](https://nvd.nis
     - [Memcachier](#memcachier)
     - [Memcached](#memcached)
     - [File](#file)
-5. [Versions](#versions)
-6. [How to Fix Vulnerabilities](#how-to-fix-vulnerabilities)
-7. [Information about vulnerabilities](#information-about-vulnerabilities)
-8. [How Gobinsec works](#how-gobinsec-works)
-9. [License](#license)
+5. [Timeout and Expiration](#timeout-and-expiration)
+6. [Versions](#versions)
+7. [How to Fix Vulnerabilities](#how-to-fix-vulnerabilities)
+8. [Information about vulnerabilities](#information-about-vulnerabilities)
+9. [How Gobinsec works](#how-gobinsec-works)
+10. [License](#license)
 
 ## Installation
 
@@ -92,16 +93,18 @@ Configuration file is in YAML format as follows:
 api-key: "28c6112c-a7bc-4a4e-9b14-75be6da02211"
 strict: false
 memcachier:
-  address:    mcx.cy.eu-central-1.ec2.memcachier.com:11211
-  expiration: 86400
-  username:   foo
-  password:   bar
+  address:    "mcx.cy.eu-central-1.ec2.memcachier.com:11211"
+  username:   "username"
+  password:   "password"
+  timeout:    "1s"
+  expiration: "24h"
 memcached:
-  address:    127.0.0.1:11211
-  expiration: 86400
+  address:    "127.0.0.1:11211"
+  timeout:    "1s"
+  expiration: "24h"
 file:
-  name:       ~/.gobinsec-cache.yml
-  expiration: 86400
+  name:       "~/.gobinsec-cache.yml"
+  expiration: "24h"
 ignore:
 - "CVE-2020-14040"
 ```
@@ -110,9 +113,9 @@ Configuration fields are the following:
 
 - **api-key**: this is your NVD API key
 - **strict**: tells if we should consider vulnerability matches without version as matching dependency
-- **memcachier** is the configuration for *memcachier*, with **address**, **expiration** (time in seconds), **username** and **password**
-- **memcached** is the configuration for *memcached*, with **address** and **expiration** time in seconds
-- **file** is the configuration for *file* cache, with **name** and **expiration** time in seconds
+- **memcachier** is the configuration for *memcachier*, see below
+- **memcached** is the configuration for *memcached*, see below
+- **file** is the configuration for *file* cache, see below
 - **ignore**: a list of CVE vulnerabilities to ignore
 
 You can also set NVD API Key in your environment with variable *NVD_API_KEY*. This key may be overwritten with value in configuration file. Your API key must be set in environment to be able to run integration tests (with target *integ*).
@@ -130,21 +133,25 @@ A cache is built with *Memcachier* if following section is found in configuratio
 ```yaml
 memcachier:
   address:    ...
-  expiration: ...
   username:   ...
   password:   ...
+  timeout:    ...
+  expiration: ...
 ```
 
 Else, il will look for following environment variables:
 
 ```
 MEMCACHIER_ADDRESS
-MEMCACHIER_EXPIRATION
 MEMCACHIER_USERNAME
 MEMCACHIER_PASSWORD
+MEMCACHIER_TIMEOUT
+MEMCACHIER_EXPIRATION
 ```
 
 [Memcachier](https://www.memcachier.com) is an online cache provider with free tiers.
+
+*Timeout* and *Expiration* configuration entries are optional and their default values are *1s* and *24h*.
 
 ### Memcached
 
@@ -153,6 +160,7 @@ A cache is built with *Memcached* if following section is found in configuration
 ```yaml
 memcached:
   address:    ...
+  timeout:    ...
   expiration: ...
 ```
 
@@ -160,20 +168,48 @@ Else it will look for following environment variables:
 
 ```
 MEMCACHED_ADDRESS
+MEMCACHED_TIMEOUT
 MEMCACHED_EXPIRATION
 ```
+
+*Timeout* and *Expiration* configuration entries are optional and their default values are *1s* and *24h*.
 
 A sample [docker-compose.yml](https://github.com/intercloud/gobinsec/blob/main/docker-compose.yml) file to start a *memcached* instance is provided in this project.
 
 ### File
 
-If none of preceding configuration is found in configuration and none of related environment variables, *Gobinsec* will use *YAML* file for caching. By default, database file is stored in *~/.gobinsec-cache.yml* and cache duration is of one day (or *86400* seconds). You can overwrite these default values with following configuration section:
+A file cache is used is none of preceding options is configured. By default, database file in YAML format is stored in *~/.gobinsec-cache.yml* and cache duration is of one day (or *24h*). You can overwrite these default values with following configuration section:
 
 ```yaml
 file:
-  name:       "/path/to/file.yml"
-  expiration: 86400
+  name:       "~/.gobinsec-cache.yml"
+  expiration: "24h"
 ```
+
+Or with these environment variables:
+
+```
+FILECACHE_FILE
+FILECACHE_EXPIRATION
+```
+
+*Expiration* configuration entry is optional and its default value is *24h*.
+
+## Timeout and Expiration
+
+These configuration keys are durations with a time unit. Possible units are:
+
+- **ns** for nanosecond
+- **us** or **µs** for microsecond
+- **ms** for millisecond
+- **s** for second
+- **m** for minute
+- **h** for hour
+
+Thus, you could write, for instance:
+
+- *1s* to set timeout to *1* second
+- *2h30m* to set expiration to *2* hours and *30* minutes
 
 ## Versions
 
