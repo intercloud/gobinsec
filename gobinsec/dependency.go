@@ -32,7 +32,10 @@ func NewDependency(name, version string) (*Dependency, error) {
 
 // Vulnerabilities return list of vulnerabilities for given dependency
 func (d *Dependency) LoadVulnerabilities() error {
-	vulnerabilities := CacheInstance.Get(d)
+	vulnerabilities, err := CacheInstance.Get(d)
+	if err != nil {
+		return err
+	}
 	if vulnerabilities == nil {
 		url := URL + d.Name
 		if config.APIKey != "" {
@@ -50,7 +53,9 @@ func (d *Dependency) LoadVulnerabilities() error {
 		if err != nil {
 			return err
 		}
-		CacheInstance.Set(d, vulnerabilities)
+		if err := CacheInstance.Set(d, vulnerabilities); err != nil {
+			return err
+		}
 	}
 	var result Response
 	if err := json.Unmarshal(vulnerabilities, &result); err != nil {

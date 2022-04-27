@@ -14,14 +14,18 @@ type Config struct {
 	File       *FileConfig       `yaml:"file"`
 	Ignore     []string          `yaml:"ignore"`
 	Strict     bool              `yaml:"strict"`
+	Verbose    bool              `yaml:"verbose"`
+	Cache      bool              `yaml:"cache"`
 }
 
 var config Config
 
 // LoadConfig loads configuration from given file
-func LoadConfig(path string, strict bool) error {
+func LoadConfig(path string, strict, verbose, cache bool) error {
 	if path == "" {
 		config.Strict = strict
+		config.Verbose = verbose
+		config.Cache = cache
 		return nil
 	}
 	bytes, err := os.ReadFile(path)
@@ -37,6 +41,8 @@ func LoadConfig(path string, strict bool) error {
 	if strict {
 		config.Strict = strict
 	}
+	config.Verbose = verbose
+	config.Cache = cache
 	return nil
 }
 

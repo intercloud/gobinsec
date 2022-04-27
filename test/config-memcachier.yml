@@ -1,8 +1,9 @@
 api-key:   "${NVD_API_KEY}"
 memcachier:
-  address:    mcx.cy.eu-central-1.ec2.memcachier.com:11211
-  expiration: 86400
-  username:   foo
-  password:   bar
+  address:    "mcx.cy.eu-central-1.ec2.memcachier.com:11211"
+  username:   "username"
+  password:   "password"
+  timeout:    "1s"
+  expiration: "24h"
 ignore:
 - "CVE-2020-14040"
