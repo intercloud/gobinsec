@@ -18,6 +18,7 @@ var Version = "NONE"
 func main() {
 	version := flag.Bool("version", false, "Print gobinsec version")
 	verbose := flag.Bool("verbose", false, "Print additional information in terminal")
+	cache := flag.Bool("cache", false, "Print cache information in terminal")
 	strict := flag.Bool("strict", false, "Vulnerabilities without version are exposed")
 	config := flag.String("config", "", "Configuration file")
 	flag.Parse()
@@ -29,7 +30,7 @@ func main() {
 		println("ERROR you must pass binary/ies to analyze on command line")
 		os.Exit(CodeError)
 	}
-	if err := gobinsec.LoadConfig(*config, *strict); err != nil {
+	if err := gobinsec.LoadConfig(*config, *strict, *verbose, *cache); err != nil {
 		println(fmt.Sprintf("ERROR %v", err))
 		os.Exit(CodeError)
 	}
@@ -45,13 +46,16 @@ func main() {
 			fmt.Printf(" analyzing %s: %v\n", path, err)
 			issue = true
 		} else {
-			binary.Report(*verbose)
+			binary.Report()
 			if binary.Vulnerable {
 				issue = true
 			}
 		}
 	}
-	gobinsec.CacheInstance.Close()
+	if err := gobinsec.CacheInstance.Close(); err != nil {
+		fmt.Fprintf(os.Stderr, "ERROR closing cache: %v\n", err)
+		os.Exit(CodeError)
+	}
 	if issue {
 		os.Exit(CodeVulnerable)
 	}

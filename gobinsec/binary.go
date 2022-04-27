@@ -79,7 +79,7 @@ func LoadVulnerabilities(dependencies chan *Dependency, wg *sync.WaitGroup) {
 		select {
 		case dependency := <-dependencies:
 			if err := dependency.LoadVulnerabilities(); err != nil {
-				fmt.Printf("ERROR loading vulnerability: %v\n", err)
+				fmt.Fprintf(os.Stderr, "ERROR loading vulnerability: %v\n", err)
 				os.Exit(1)
 			}
 			wg.Done()
@@ -91,17 +91,17 @@ func LoadVulnerabilities(dependencies chan *Dependency, wg *sync.WaitGroup) {
 
 // Report prints a report on terminal
 // nolint:gocyclo // this is life
-func (b *Binary) Report(verbose bool) {
+func (b *Binary) Report() {
 	fmt.Printf("%s: ", filepath.Base(b.Path))
 	if b.Vulnerable {
 		ColorRed.Println("VULNERABLE")
 	} else {
 		ColorGreen.Println("OK")
 	}
-	if len(b.Dependencies) > 0 && (b.Vulnerable || verbose) {
+	if len(b.Dependencies) > 0 && (b.Vulnerable || config.Verbose) {
 		fmt.Println("dependencies:")
 		for _, dependency := range b.Dependencies {
-			if !dependency.Vulnerable && !verbose {
+			if !dependency.Vulnerable && !config.Verbose {
 				continue
 			}
 			fmt.Printf("- name:    '%s'\n", dependency.Name)
@@ -110,7 +110,7 @@ func (b *Binary) Report(verbose bool) {
 			if len(dependency.Vulnerabilities) > 0 {
 				fmt.Println("  vulnerabilities:")
 				for _, vulnerability := range dependency.Vulnerabilities {
-					if !vulnerability.Exposed && !verbose {
+					if !vulnerability.Exposed && !config.Verbose {
 						continue
 					}
 					fmt.Printf("  - id: '%s'\n", vulnerability.ID)

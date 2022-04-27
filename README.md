@@ -68,6 +68,12 @@ Exit code is *1* if exposed vulnerabilities were found, *2* if there was an erro
 
 You can pass *-verbose* option on command line to print vulnerability report, even if binary is not vulnerable and for all vulnerabilities, even if they are ignored or not exposed.
 
+To print cache information, pass *-cache* on command line. This will print dependencies along with following symbols:
+
+- **>>>** vulnerabilities sent in cache for given dependency
+- **<<<** vulnerabilities retrieved from cache for given dependency
+- **!!!** vulnerabilities missed in cache for given dependency
+
 You can set *-strict* flag on command line so that vulnerabilities without version are considered matching dependency version. In this case, you should check vulnerability manually and disable it in configuration file if necessary.
 
 You can pass configuration file with *-config config.yml*, see configuration section below.
