@@ -61,7 +61,11 @@ func (b *Binary) GetDependencies() error {
 		dependencies <- dependency
 		wg.Add(1)
 	}
-	for i := 0; i < NumGoroutines; i++ {
+	numGoroutines := NumGoroutines
+	if config.Wait {
+		numGoroutines = 1
+	}
+	for i := 0; i < numGoroutines; i++ {
 		go LoadVulnerabilities(dependencies, &wg)
 	}
 	wg.Wait()

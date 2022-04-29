@@ -91,7 +91,10 @@ Configuration file is in YAML format as follows:
 
 ```yaml
 api-key: "28c6112c-a7bc-4a4e-9b14-75be6da02211"
+wait: false
 strict: false
+ignore:
+- "CVE-2020-14040"
 memcachier:
   address:    "mcx.cy.eu-central-1.ec2.memcachier.com:11211"
   username:   "username"
@@ -105,18 +108,17 @@ memcached:
 file:
   name:       "~/.gobinsec-cache.yml"
   expiration: "24h"
-ignore:
-- "CVE-2020-14040"
 ```
 
 Configuration fields are the following:
 
 - **api-key**: this is your NVD API key
+- **wait**: tells if we should wait between NVD API calls to ensure that we are below rate limits
 - **strict**: tells if we should consider vulnerability matches without version as matching dependency
+- **ignore**: a list of CVE vulnerabilities to ignore
 - **memcachier** is the configuration for *memcachier*, see below
 - **memcached** is the configuration for *memcached*, see below
 - **file** is the configuration for *file* cache, see below
-- **ignore**: a list of CVE vulnerabilities to ignore
 
 You can also set NVD API Key in your environment with variable *NVD_API_KEY*. This key may be overwritten with value in configuration file. Your API key must be set in environment to be able to run integration tests (with target *integ*).
 
@@ -124,7 +126,9 @@ Note that without API key, you will be limited to *10* requests in a rolling *60
 
 ## Cache
 
-A cache is useful because if you perform more call to NVD database than allowed, your calls will significantly slow down. Gobinsec tries to build caches in this order:
+A cache is useful to limit NVD API calls. If you perform more call to NVD database than allowed, your calls will significantly slow down or you will get status code *403* calling the API.
+
+Gobinsec tries to build caches in this order:
 
 ### Memcachier
 

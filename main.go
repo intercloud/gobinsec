@@ -19,6 +19,7 @@ func main() {
 	version := flag.Bool("version", false, "Print gobinsec version")
 	verbose := flag.Bool("verbose", false, "Print additional information in terminal")
 	cache := flag.Bool("cache", false, "Print cache information in terminal")
+	wait := flag.Bool("wait", false, "Wait between NVD API calls")
 	strict := flag.Bool("strict", false, "Vulnerabilities without version are exposed")
 	config := flag.String("config", "", "Configuration file")
 	flag.Parse()
@@ -30,7 +31,7 @@ func main() {
 		println("ERROR you must pass binary/ies to analyze on command line")
 		os.Exit(CodeError)
 	}
-	if err := gobinsec.LoadConfig(*config, *strict, *verbose, *cache); err != nil {
+	if err := gobinsec.LoadConfig(*config, *strict, *wait, *verbose, *cache); err != nil {
 		println(fmt.Sprintf("ERROR %v", err))
 		os.Exit(CodeError)
 	}

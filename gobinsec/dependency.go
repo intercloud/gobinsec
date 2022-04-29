@@ -5,12 +5,18 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
 const (
-	URL             = "https://services.nvd.nist.gov/rest/json/cves/1.0/?keyword="
-	StatusCodeLimit = 300
+	URL                  = "https://services.nvd.nist.gov/rest/json/cves/1.0/?keyword="
+	StatusCodeLimit      = 300
+	RateMinuteWithoutKey = 10
+	RateMinuteWithKey    = 100
 )
+
+// timeLastCall is time for last NVD API call
+var timeLastCall time.Time
 
 // Dependency is a dependency with vulnerabilities
 type Dependency struct {
@@ -37,6 +43,7 @@ func (d *Dependency) LoadVulnerabilities() error {
 		return err
 	}
 	if vulnerabilities == nil {
+		WaitBeforeCall()
 		url := URL + d.Name
 		if config.APIKey != "" {
 			url += "&apiKey=" + config.APIKey
@@ -73,6 +80,22 @@ func (d *Dependency) LoadVulnerabilities() error {
 		d.Vulnerabilities = append(d.Vulnerabilities, *vulnerability)
 	}
 	return nil
+}
+
+// WaitBeforeCall waits in order not to exceed NVD call rate limit
+func WaitBeforeCall() {
+	if config.Wait {
+		elapsedSinceLastCall := time.Since(timeLastCall)
+		timeToSleep := (60000 / RateMinuteWithoutKey) * time.Millisecond
+		if config.APIKey != "" {
+			timeToSleep = (60000 / RateMinuteWithKey) * time.Millisecond
+		}
+		timeToWait := timeToSleep - elapsedSinceLastCall
+		if timeToWait > 0 {
+			time.Sleep(timeToWait)
+		}
+		timeLastCall = time.Now()
+	}
 }
 
 // Key returns a key as a string for caching
