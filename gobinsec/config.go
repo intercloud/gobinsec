@@ -7,6 +7,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// Config is the configuration from YAML config file and command line options
 type Config struct {
 	APIKey     string            `yaml:"api-key"`
 	Memcached  *MemcachedConfig  `yaml:"memcached"`
@@ -16,30 +17,31 @@ type Config struct {
 	Strict     bool              `yaml:"strict"`
 	Verbose    bool              `yaml:"verbose"`
 	Cache      bool              `yaml:"cache"`
+	Wait       bool              `yaml:"wait"`
 }
 
+// config is shared
 var config Config
 
-// LoadConfig loads configuration from given file
-func LoadConfig(path string, strict, verbose, cache bool) error {
-	if path == "" {
-		config.Strict = strict
-		config.Verbose = verbose
-		config.Cache = cache
-		return nil
-	}
-	bytes, err := os.ReadFile(path)
-	if err != nil {
-		return fmt.Errorf("loading configuration file: %v", err)
-	}
-	if err := yaml.Unmarshal(bytes, &config); err != nil {
-		return fmt.Errorf("parsing configuration: %v", err)
+// LoadConfig loads configuration from given file and overwrite with command line options
+func LoadConfig(path string, strict, wait, verbose, cache bool) error {
+	if path != "" {
+		bytes, err := os.ReadFile(path)
+		if err != nil {
+			return fmt.Errorf("loading configuration file: %v", err)
+		}
+		if err := yaml.Unmarshal(bytes, &config); err != nil {
+			return fmt.Errorf("parsing configuration: %v", err)
+		}
 	}
 	if config.APIKey == "" {
 		config.APIKey = os.Getenv("NVD_API_KEY")
 	}
 	if strict {
-		config.Strict = strict
+		config.Strict = true
+	}
+	if wait {
+		config.Wait = true
 	}
 	config.Verbose = verbose
 	config.Cache = cache
