@@ -68,7 +68,9 @@ tag: # Create release tag
 upload: # Publish release on github
 	@echo "Creating release $(VERSION)"
 	@read -p "Title: " title; \
-	description=`git log --pretty=format:"%h %s"`; \
+	tag1=`git tag | sort -V | head -1`; \
+	tag2=`git tag | sort -V | head -2 | awk '{split($0, tags, "\n")} END {print tags[1]}'`; \
+	description=`git log --pretty=format:"%h %s" $$tag1..$$tag2`; \
 	github-release release \
 		--user intercloud \
 		--repo gobinsec \
