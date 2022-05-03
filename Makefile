@@ -68,7 +68,7 @@ tag: # Create release tag
 
 upload: # Publish release on github
 	@echo "Creating release $(VERSION)"
-	@read -rp "Type release description: " -d '\04' DESCRIPTION; \
+	@read -rp "Type release description: " -d $'\04' DESCRIPTION; \
 	github-release release \
 		--user intercloud \
 		--repo gobinsec \
