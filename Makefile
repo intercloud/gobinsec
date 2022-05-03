@@ -69,17 +69,17 @@ tag: # Create release tag
 
 upload: # Publish release on github
 	@echo "Creating release $(VERSION)"
-	@github-release release \
-		--user $$GITHUB_USER \
-		--repo intercloud \
+	@echo github-release release \
+		--user intercloud \
+		--repo gobinsec \
 		--tag $(VERSION) \
 		--name $(TITLE) \
 		--description $(DESCRIPTION)
 	@for file in $(BUILD_DIR)/bin/*; do \
 		echo "Uploading $$file..."; \
 		github-release upload \
-			--user $$GITHUB_USER \
-			--repo intercloud \
+			--user intercloud \
+			--repo gobinsec \
 			--tag $(VERSION) \
 			--name `basename $$file` \
 			--file $$file; \
