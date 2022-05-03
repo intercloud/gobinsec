@@ -39,13 +39,11 @@ integ: build # Run integration test
 	@cmp test/report-config.yml $(BUILD_DIR)/report-config.yml
 
 binaries: # Generate binaries
-	$(title)
 	@mkdir -p $(BUILD_DIR)/bin
 	@gox -ldflags "-X main.Version=$(VERSION) -s -f" -osarch '$(GOOSARCH)' -output=$(BUILD_DIR)/bin/{{.Dir}}-{{.OS}}-{{.Arch}} $(GOPACKAGE)
 	@cp install $(BUILD_DIR)/bin/
 
 check: # Check release prerequisites
-	$(title)
 	@if [ "$(VERSION)" = "UNKNOWN" ]; then \
 		echo "ERROR you must pass VERSION=X.Y.Z on command line"; \
 		exit 1; \
@@ -58,16 +56,18 @@ check: # Check release prerequisites
 		echo "GITHUB_USER must be defined in your environment"; \
 		exit 1; \
 	fi
+	@if [ "$$GITHUB_TOKEN" = "" ]; then \
+		echo "GITHUB_TOKEN must be defined in your environment"; \
+		exit 1; \
+	fi
 	@git diff-index --quiet HEAD -- || (echo "ERROR There are uncommitted changes" && exit 1)
 	@test `git rev-parse --abbrev-ref HEAD` = "$(MAIN_BRANCH)" || (echo "ERROR You are not on branch $(MAIN_BRANCH)" && exit 1)
 
 tag: # Create release tag
-	$(title)
 	@git tag -a $(VERSION) -m "Release $(VERSION)"
 	@git push origin --tags
 
 upload: # Publish release on github
-	$(title)
 	@echo "Creating release $(VERSION)"
 	@github-release release \
 		--user $$GITHUB_USER \
