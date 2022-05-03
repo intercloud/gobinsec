@@ -68,13 +68,11 @@ tag: # Create release tag
 
 upload: # Publish release on github
 	@echo "Creating release $(VERSION)"
-	@read -rp "Type release description: " -d $'\04' DESCRIPTION; \
-	github-release release \
+	@github-release release \
 		--user intercloud \
 		--repo gobinsec \
 		--tag "$(VERSION)" \
-		--name "$(TITLE)" \
-		--description '$$DESCRIPTION'
+		--name "$(TITLE)"
 	@sleep 5
 	@for file in $(BUILD_DIR)/bin/*; do \
 		echo "Uploading $$file..."; \
