@@ -81,7 +81,7 @@ upload: # Publish release on github
 			--user $$GITHUB_USER \
 			--repo intercloud \
 			--tag $(VERSION) \
-			--name $(shell basename $$file) \
+			--name `basename $$file` \
 			--file $$file; \
 	done
 
