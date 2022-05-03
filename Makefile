@@ -1,6 +1,7 @@
 BUILD_DIR   = build
 VERSION     = "UNKNOWN"
 GOOSARCH    = $(shell go tool dist list | grep -v android)
+MAIN_BRANCH = publish-release
 TITLE       = "EMPTY"
 DESCRIPTION = ""
 
@@ -54,7 +55,7 @@ check: # Check release prerequisites
 		exit 1; \
 	fi
 	@git diff-index --quiet HEAD -- || (echo "ERROR There are uncommitted changes" && exit 1)
-	@test `git rev-parse --abbrev-ref HEAD` = 'main' || (echo "ERROR You are not on branch main" && exit 1)
+	@test `git rev-parse --abbrev-ref HEAD` = "$(MAIN_BRANCH)" || (echo "ERROR You are not on branch $(MAIN_BRANCH)" && exit 1)
 
 tag: # Create release tag
 	$(title)
