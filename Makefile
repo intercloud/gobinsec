@@ -3,7 +3,7 @@ VERSION     = "UNKNOWN"
 GOOSARCH    = $(shell go tool dist list | grep -v android)
 MAIN_BRANCH = publish-release
 TITLE       = "EMPTY"
-DESCRIPTION = ""
+DESCRIPTION = " "
 
 .DEFAULT_GOAL :=
 default: clean fmt lint test integ
@@ -72,15 +72,15 @@ upload: # Publish release on github
 	@github-release release \
 		--user intercloud \
 		--repo gobinsec \
-		--tag $(VERSION) \
-		--name $(TITLE) \
-		--description $(DESCRIPTION)
+		--tag "$(VERSION)" \
+		--name "$(TITLE)" \
+		--description "$(DESCRIPTION)"
 	@for file in $(BUILD_DIR)/bin/*; do \
 		echo "Uploading $$file..."; \
 		github-release upload \
 			--user intercloud \
 			--repo gobinsec \
-			--tag $(VERSION) \
+			--tag "$(VERSION)" \
 			--name `basename $$file` \
 			--file $$file; \
 	done
