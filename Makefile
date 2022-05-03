@@ -3,7 +3,6 @@ VERSION     = "UNKNOWN"
 GOOSARCH    = $(shell go tool dist list | grep -v android)
 MAIN_BRANCH = publish-release
 TITLE       = "EMPTY"
-DESCRIPTION = "NONE"
 
 .DEFAULT_GOAL :=
 default: clean fmt lint test integ
@@ -52,10 +51,6 @@ check: # Check release prerequisites
 		echo 'ERROR you must pass TITLE="..." on command line'; \
 		exit 1; \
 	fi
-	@if [ "$(DESCRIPTION)" = "NONE" ]; then \
-		echo 'ERROR you must pass DESCRIPTION="..." on command line'; \
-		exit 1; \
-	fi
 	@if [ "$$GITHUB_USER" = "" ]; then \
 		echo "GITHUB_USER must be defined in your environment"; \
 		exit 1; \
@@ -73,12 +68,13 @@ tag: # Create release tag
 
 upload: # Publish release on github
 	@echo "Creating release $(VERSION)"
-	@github-release release \
+	@read -rp "Type release description: " -d '\04' DESCRIPTION; \
+	github-release release \
 		--user intercloud \
 		--repo gobinsec \
 		--tag "$(VERSION)" \
 		--name "$(TITLE)" \
-		--description "$(DESCRIPTION)"
+		--description "$$DESCRIPTION"
 	@sleep 5
 	@for file in $(BUILD_DIR)/bin/*; do \
 		echo "Uploading $$file..."; \
