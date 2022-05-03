@@ -1,7 +1,7 @@
 BUILD_DIR   = build
 VERSION     = "UNKNOWN"
 GOOSARCH    = $(shell go tool dist list | grep -v android)
-MAIN_BRANCH = publish-release
+MAIN_BRANCH = main
 
 .DEFAULT_GOAL :=
 default: clean fmt lint test integ
