@@ -74,7 +74,7 @@ upload: # Publish release on github
 		--repo gobinsec \
 		--tag "$(VERSION)" \
 		--name "$(TITLE)" \
-		--description "$$DESCRIPTION"
+		--description '$$DESCRIPTION'
 	@sleep 5
 	@for file in $(BUILD_DIR)/bin/*; do \
 		echo "Uploading $$file..."; \
