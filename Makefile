@@ -1,6 +1,8 @@
-BUILD_DIR = build
-VERSION   = "UNKNOWN"
-GOOSARCH  = $(shell go tool dist list | grep -v android)
+BUILD_DIR   = build
+VERSION     = "UNKNOWN"
+GOOSARCH    = $(shell go tool dist list | grep -v android)
+TITLE       = "EMPTY"
+DESCRIPTION = ""
 
 .DEFAULT_GOAL :=
 default: clean fmt lint test integ
@@ -41,15 +43,41 @@ binaries: # Generate binaries
 	@gox -ldflags "-X main.Version=$(VERSION) -s -f" -osarch '$(GOOSARCH)' -output=$(BUILD_DIR)/bin/{{.Dir}}-{{.OS}}-{{.Arch}} $(GOPACKAGE)
 	@cp install $(BUILD_DIR)/bin/
 
-release: clean lint test integ binaries # Perform release (must pass VERSION=X.Y.Z on command line)
+check: # Check release prerequisites
+	$(title)
 	@if [ "$(VERSION)" = "UNKNOWN" ]; then \
 		echo "ERROR you must pass VERSION=X.Y.Z on command line"; \
 		exit 1; \
 	fi
+	@if [ "$(TITLE)" = "EMPTY" ]; then \
+		echo 'ERROR you must pass TITLE="..." on command line'; \
+		exit 1; \
+	fi
 	@git diff-index --quiet HEAD -- || (echo "ERROR There are uncommitted changes" && exit 1)
 	@test `git rev-parse --abbrev-ref HEAD` = 'main' || (echo "ERROR You are not on branch main" && exit 1)
+
+tag: # Create release tag
+	$(title)
 	@git tag -a $(VERSION) -m "Release $(VERSION)"
 	@git push origin --tags
 
-memcached: # Start memcached
-	@docker-compose up -d memcached
+upload: # Publish release on github
+	$(title)
+	@echo "Creating release $(VERSION)"
+	@github-release release \
+		--user $$GITHUB_USER \
+		--repo intercloud \
+		--tag $(VERSION) \
+		--name $(TITLE) \
+		--description $(DESCRIPTION)
+	@for file in $(BUILD_DIR)/bin/*; do \
+		echo "Uploading $$file..."; \
+		github-release upload \
+			--user $$GITHUB_USER \
+			--repo intercloud \
+			--tag $(VERSION) \
+			--name $(shell basename $$file) \
+			--file $$file; \
+	done
+
+release: check clean lint test integ binaries tag upload # Perform release (must pass VERSION=X.Y.Z on command line)
