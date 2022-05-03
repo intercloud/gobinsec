@@ -3,7 +3,7 @@ VERSION     = "UNKNOWN"
 GOOSARCH    = $(shell go tool dist list | grep -v android)
 MAIN_BRANCH = publish-release
 TITLE       = "EMPTY"
-DESCRIPTION = " "
+DESCRIPTION = "NONE"
 
 .DEFAULT_GOAL :=
 default: clean fmt lint test integ
@@ -50,6 +50,10 @@ check: # Check release prerequisites
 	fi
 	@if [ "$(TITLE)" = "EMPTY" ]; then \
 		echo 'ERROR you must pass TITLE="..." on command line'; \
+		exit 1; \
+	fi
+	@if [ "$(DESCRIPTION)" = "NONE" ]; then \
+		echo 'ERROR you must pass DESCRIPTION="..." on command line'; \
 		exit 1; \
 	fi
 	@if [ "$$GITHUB_USER" = "" ]; then \
