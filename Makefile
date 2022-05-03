@@ -54,6 +54,10 @@ check: # Check release prerequisites
 		echo 'ERROR you must pass TITLE="..." on command line'; \
 		exit 1; \
 	fi
+	@if [ "$$GITHUB_USER" = "" ]; then \
+		echo "GITHUB_USER must be defined in your environment"; \
+		exit 1; \
+	fi
 	@git diff-index --quiet HEAD -- || (echo "ERROR There are uncommitted changes" && exit 1)
 	@test `git rev-parse --abbrev-ref HEAD` = "$(MAIN_BRANCH)" || (echo "ERROR You are not on branch $(MAIN_BRANCH)" && exit 1)
 
