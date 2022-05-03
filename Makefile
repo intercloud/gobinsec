@@ -2,7 +2,6 @@ BUILD_DIR   = build
 VERSION     = "UNKNOWN"
 GOOSARCH    = $(shell go tool dist list | grep -v android)
 MAIN_BRANCH = publish-release
-TITLE       = "EMPTY"
 
 .DEFAULT_GOAL :=
 default: clean fmt lint test integ
@@ -68,11 +67,12 @@ tag: # Create release tag
 
 upload: # Publish release on github
 	@echo "Creating release $(VERSION)"
-	@github-release release \
+	@read -rp "Title: " title; \
+	github-release release \
 		--user intercloud \
 		--repo gobinsec \
 		--tag "$(VERSION)" \
-		--name "$(TITLE)"
+		--name "$$title"
 	@sleep 5
 	@for file in $(BUILD_DIR)/bin/*; do \
 		echo "Uploading $$file..."; \
