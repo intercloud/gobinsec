@@ -6,13 +6,35 @@ before:
     - go mod tidy
     # you may remove this if you don't need go generate
     # - go generate ./...
+
+# Set GITHUB_TOKEN
 builds:
-  - env:
+  - skip: false
+    env:
       - CGO_ENABLED=0
     goos:
       - linux
       - windows
       - darwin
+    ldflags:
+      - -X main.Version={{.Version}} -s -f
+
+release:
+  disable: false
+  prerelease: auto
+  mode: keep-existing
+
+brews:
+  - tap:
+      owner: intercloud
+      name: homebrew-tap
+      branch: test
+      token: '{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}'
+    test: |
+      system "#{bin}/gobinsec"
+    install: |
+      bin.install @@filename => "gobinsec"
+
 archives:
   - replacements:
       darwin: Darwin
@@ -20,13 +42,25 @@ archives:
       windows: Windows
       386: i386
       amd64: x86_64
+
 checksum:
   name_template: 'checksums.txt'
+
 snapshot:
   name_template: '{{ incpatch .Version }}-next'
+
 changelog:
+  use: github
   sort: asc
   filters:
     exclude:
       - '^docs:'
       - '^test:'
+      - '^ci:'
+
+# Set env SLACK_WEBHOOK
+announce:
+  slack:
+    enabled: true
+    channel: '#console-dev'
+    username: Github Release
