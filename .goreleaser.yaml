@@ -30,6 +30,10 @@ brews:
       name: homebrew-tap
       branch: test
       token: '{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}'
+    folder: Formula
+    # Uncomment for private repositoris
+    # download_strategy: GitHubPrivateRepositoryReleaseDownloadStrategy
+    # custom_require: lib/custom_download_strategy
     test: |
       system "#{bin}/gobinsec"
     install: |
