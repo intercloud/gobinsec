@@ -65,7 +65,7 @@ tag: # Create release tag
 	@git tag -a $(VERSION) -m "Release $(VERSION)"
 	@git push origin --tags
 
-upload: # Publish release on github
+publish: # Publish release on github
 	@echo "Creating release $(VERSION)"
 	@read -p "Title: " title; \
 	tag2=`git tag | sort -rV | head -1`; \
@@ -88,4 +88,4 @@ upload: # Publish release on github
 			--file $$file; \
 	done
 
-release: check clean lint test integ binaries tag upload # Perform release (must pass VERSION=X.Y.Z on command line)
+release: check clean lint test integ binaries tag publish # Perform release (must pass VERSION=X.Y.Z on command line)
