@@ -2,10 +2,6 @@ name: goreleaser
 
 on:
   push:
-    branches:
-      - main
-      - 'releases/**'
-      - add-goreleaser # Test
     # run only against tags
     tags:
       - v*
