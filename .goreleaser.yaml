@@ -61,6 +61,8 @@ changelog:
       - '^docs:'
       - '^test:'
       - '^ci:'
+      - '^draft'
+      - '^wip'
 
 # Set env SLACK_WEBHOOK
 announce:
