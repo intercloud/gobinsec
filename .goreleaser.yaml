@@ -64,7 +64,6 @@ changelog:
       - '^draft'
       - '^wip'
 
-# Set env SLACK_WEBHOOK
 announce:
   slack:
     enabled: true
