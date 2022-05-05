@@ -34,8 +34,8 @@ brews:
     # Uncomment for private repositoris
     # download_strategy: GitHubPrivateRepositoryReleaseDownloadStrategy
     # custom_require: lib/custom_download_strategy
-    description: "Gobinsec"
-    homepage: "https://github.com/intercloud/gobinsec"
+    description: 'Gobinsec'
+    homepage: 'https://github.com/intercloud/gobinsec'
     test: |
       system "#{bin}/gobinsec -version"
     install: |
