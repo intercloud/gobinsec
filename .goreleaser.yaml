@@ -6,6 +6,7 @@ before:
     - go mod tidy
 
 # Set GITHUB_TOKEN
+# Build go binaries for specified OS/ARCH
 builds:
   - skip: false
     env:
@@ -17,11 +18,13 @@ builds:
     ldflags:
       - -X main.Version={{.Version}} -s -f
 
+# Create/Update Github release
 release:
   disable: false
   prerelease: auto
   mode: keep-existing
 
+# Update homebrew formula
 brews:
   - tap:
       owner: intercloud
@@ -38,7 +41,7 @@ brews:
       system "#{bin}/gobinsec -version"
     install: |
       bin.install "gobinsec"
-
+# Archive all attachements
 archives:
   - replacements:
       darwin: Darwin
@@ -47,12 +50,15 @@ archives:
       386: i386
       amd64: x86_64
 
+# Generate checksums file
 checksum:
   name_template: 'checksums.txt'
 
+# Build in snapshot `goreleaser --snapshot``
 snapshot:
   name_template: '{{ incpatch .Version }}-next'
 
+# Create a changelog
 changelog:
   use: github
   sort: asc
@@ -64,6 +70,7 @@ changelog:
       - '^draft'
       - '^wip'
 
+# Send announce
 announce:
   slack:
     enabled: true
