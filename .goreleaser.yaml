@@ -25,15 +25,15 @@ release:
 brews:
   - tap:
       owner: intercloud
-      name: homebrew-tap
-      branch: test
+      name: homebrew-tap-test
       token: '{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}'
+    license: MPL
     folder: Formula
     # Uncomment for private repositoris
     # download_strategy: GitHubPrivateRepositoryReleaseDownloadStrategy
     # custom_require: lib/custom_download_strategy
     description: 'Gobinsec'
-    # homepage: 'https://github.com/intercloud/gobinsec'
+    homepage: 'https://github.com/intercloud/gobinsec'
     test: |
       system "#{bin}/gobinsec -version"
     install: |
