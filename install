@@ -88,7 +88,7 @@ command -v curl >/dev/null 2>&1 || { logF "curl is required"; }
 
 # Set URI to download
 assetUri="${githubUrl}/${owner}/${repo}/releases/download/${version}/${fileName}"
-if [ "${version}" == "latest" ]; then
+if [[ "${version}" == "latest" ]]; then
 
     asset=$(
         curl -sSf ${githubUrl}/${owner}/${repo}/releases |
