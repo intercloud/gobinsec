@@ -28,13 +28,10 @@ get_arch() {
     a=$(uname -m)
     case ${a} in
     "x86_64" | "amd64")
-        echo "amd64"
+        echo "x86_64"
         ;;
     "i386" | "i486" | "i586")
-        echo "386"
-        ;;
-    "aarch64" | "arm64" | "arm")
-        echo "arm64"
+        echo "i386"
         ;;
     *)
         echo ${NIL}
@@ -86,9 +83,22 @@ else
     executableFolder="/bin"
 fi
 
+# check command availability
 command -v curl >/dev/null 2>&1 || { logF "curl is required"; }
 
+# Set URI to download
 assetUri="${githubUrl}/${owner}/${repo}/releases/download/${version}/${fileName}"
+if [ "${version}" == "latest" ]; then
+
+    asset=$(
+        curl -sSf ${githubUrl}/${owner}/${repo}/releases |
+            grep -o "${owner}/${repo}/releases/download/.*/${fileName}" |
+            head -n 1
+    )
+
+    assetUri="${githubUrl}/${asset}"
+fi
+
 downloadFolder="/tmp/${binary}"
 mkdir -p ${downloadFolder}
 downloadedFile="${downloadFolder}/${fileName}"
@@ -96,8 +106,7 @@ downloadedFile="${downloadFolder}/${fileName}"
 log "[1/2] Download ${assetUri}"
 curl -sS --fail --location --output "${downloadedFile}" "${assetUri}"
 
-log "[2/2] Install ${binary} to the ${executableFolder}"
-
+log "[2/2] Install ${binary} to '${executableFolder}'"
 if [ -w "${directory}" ]; then
     tar -xz -f ${downloadedFile} -C ${executableFolder}
     chmod +x ${executableFolder}/${binary}
