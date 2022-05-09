@@ -23,6 +23,8 @@ release:
   disable: false
   prerelease: auto
   mode: keep-existing
+  extra_files:
+    - glob: ./install
 
 # Update homebrew formula
 brews:
@@ -43,10 +45,11 @@ brews:
       bin.install "gobinsec"
 # Archive all attachements
 archives:
-  - replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
+  - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    format_overrides:
+      - goos: windows
+        format: zip
+    replacements:
       386: i386
       amd64: x86_64
 
