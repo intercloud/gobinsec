@@ -4,76 +4,115 @@
 #
 # $ sh -c "$(curl -L https://github.com/intercloud/gobinsec/releases/latest/download/install)"
 #
-# or (if you don't have curl installed):
-#
-# $ sh -c "$(wget -O - https://github.com/intercloud/gobinsec/releases/latest/download/install)"
 
 set -e
 
-NAME="gobinsec"
+log() {
+    echo "$@"
+}
+
+logF() {
+    echo >&2 "$@"
+    exit 1
+}
+
+repo="gobinsec"
+owner="intercloud"
+binary="${repo}"
+
+get_os() {
+    echo $(uname -s | awk '{print tolower($0)}')
+}
+
+get_arch() {
+    a=$(uname -m)
+    case ${a} in
+    "x86_64" | "amd64")
+        echo "x86_64"
+        ;;
+    "i386" | "i486" | "i586")
+        echo "i386"
+        ;;
+    *)
+        echo ${NIL}
+        ;;
+    esac
+}
+
+if [ -z "$githubUrl" ]; then
+    githubUrl="https://github.com"
+fi
+
+# parse flag
+for i in "$@"; do
+    case $i in
+    -v=* | --version=*)
+        version="${i#*=}"
+        shift
+        ;;
+    *)
+        # unknown option
+        ;;
+    esac
+done
+
+if [ -z "$version" ]; then
+    version="latest"
+fi
 
 # get OS and ARCH and build binary name
-os=`uname | tr '[:upper:]' '[:lower:]'`
-arch=`uname -m`
+os=$(get_os)
+arch=$(get_arch)
 
-if [ "$arch" = "i386" ]; then
-    arch="386"
-elif [ "$arch" = "x86_64" ]; then
-    arch="amd64"
-fi
+log "os: ${os}"
+log "arch: ${arch}"
+log "version: ${version:-latest}"
 
-echo "os: ${os}"
-echo "arch: ${arch}"
-
-binary="${NAME}-${os}-${arch}"
+fileName="${binary}_${os}_${arch}.tar.gz"
 
 # set default installation directory
-if [ -d "/opt/local/bin" ]
-then
-    DEFAULT_DIR="/opt/local/bin"
-elif [ -d "/opt/bin" ]
-then
-    DEFAULT_DIR="/opt/bin"
-elif [ -d "/usr/local/bin" ]
-then
-    DEFAULT_DIR="/usr/local/bin"
-elif [ -d "/usr/bin" ]
-then
-    DEFAULT_DIR="/usr/bin"
+if [ -d "/opt/local/bin" ]; then
+    executableFolder="/opt/local/bin"
+elif [ -d "/opt/bin" ]; then
+    executableFolder="/opt/bin"
+elif [ -d "/usr/local/bin" ]; then
+    executableFolder="/usr/local/bin"
+elif [ -d "/usr/bin" ]; then
+    executableFolder="/usr/bin"
 else
-    DEFAULT_DIR="/bin"
+    executableFolder="/bin"
 fi
 
-# select command to download binary
-if hash curl 2>/dev/null
-then
-    command="curl -L -o"
-elif hash wget 2>/dev/null
-then
-    command="wget -O"
+# check command availability
+command -v curl >/dev/null 2>&1 || { logF "curl is required"; }
+
+# Set URI to download
+assetUri="${githubUrl}/${owner}/${repo}/releases/download/${version}/${fileName}"
+if [ "${version}" == "latest" ]; then
+
+    asset=$(
+        curl -sSf ${githubUrl}/${owner}/${repo}/releases |
+            grep -o "${owner}/${repo}/releases/download/.*/${fileName}" |
+            head -n 1
+    )
+
+    assetUri="${githubUrl}/${asset}"
+fi
+
+downloadFolder="/tmp/${binary}"
+mkdir -p ${downloadFolder}
+downloadedFile="${downloadFolder}/${fileName}"
+
+log "[1/2] Download ${assetUri}"
+curl -sS --fail --location --output "${downloadedFile}" "${assetUri}"
+
+log "[2/2] Install ${binary} to '${executableFolder}'"
+if [ -w "${directory}" ]; then
+    tar -xz -f ${downloadedFile} -C ${executableFolder}
+    chmod +x ${executableFolder}/${binary}
 else
-    echo "You must install curl or wget to run this installation script"
-    exit 1
+    sudo tar -xz -f ${downloadedFile} -C ${executableFolder}
+    sudo chmod +x ${executableFolder}/${binary}
 fi
 
-# download binary in /tmp/${NAME} and make it executable
-${command} /tmp/${NAME} https://github.com/intercloud/${NAME}/releases/latest/download/${binary}
-chmod +x /tmp/${NAME}
-
-# prompt for installation directory
-read -p "Installation directory [${DEFAULT_DIR}]? " directory
-if [ -z "$directory" ]
-then
-    directory=${DEFAULT_DIR}
-fi
-
-# copy binary to installation directory
-if [ -w "${directory}" ]
-then
-    mv /tmp/${NAME} ${directory}
-else
-    sudo mv /tmp/${NAME} ${directory}
-    sudo chown root: ${directory}/${NAME}
-fi
-
-echo "${NAME} installed in '${directory}' directory"
+echo "${binary} installed in '${executableFolder}' directory"

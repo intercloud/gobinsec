@@ -1,0 +1,78 @@
+before:
+  hooks:
+    - go mod tidy
+
+# Set GITHUB_TOKEN
+# Build go binaries for specified OS/ARCH
+builds:
+  - skip: false
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    ldflags:
+      - -X main.Version={{.Version}} -s -f
+
+# Create/Update Github release
+release:
+  disable: false
+  prerelease: auto
+  mode: keep-existing
+  extra_files:
+    - glob: ./install
+
+# Update homebrew formula
+brews:
+  - tap:
+      owner: intercloud
+      name: homebrew-tap
+      token: '{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}'
+    license: MPL
+    folder: Formula
+    # Uncomment for private repositoris
+    # download_strategy: GitHubPrivateRepositoryReleaseDownloadStrategy
+    # custom_require: lib/custom_download_strategy
+    description: 'Gobinsec'
+    homepage: 'https://github.com/intercloud/gobinsec'
+    test: |
+      system "#{bin}/gobinsec -version"
+    install: |
+      bin.install "gobinsec"
+# Archive all attachements
+archives:
+  - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    format_overrides:
+      - goos: windows
+        format: zip
+    replacements:
+      386: i386
+      amd64: x86_64
+
+# Generate checksums file
+checksum:
+  name_template: 'checksums.txt'
+
+# Build in snapshot `goreleaser --snapshot``
+snapshot:
+  name_template: '{{ incpatch .Version }}-next'
+
+# Create a changelog
+changelog:
+  use: github
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^ci:'
+      - '^draft'
+      - '^wip'
+
+# Send announce
+announce:
+  slack:
+    enabled: true
+    channel: '#console-dev'
+    username: Github Release
