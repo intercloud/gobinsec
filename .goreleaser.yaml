@@ -1,8 +1,5 @@
-# This is an example .goreleaser.yml file with some sensible defaults.
-# Make sure to check the documentation at https://goreleaser.com
 before:
   hooks:
-    # You may remove this if you don't use go modules.
     - go mod tidy
 
 # Set GITHUB_TOKEN
@@ -30,7 +27,7 @@ release:
 brews:
   - tap:
       owner: intercloud
-      name: homebrew-tap-test
+      name: homebrew-tap
       token: '{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}'
     license: MPL
     folder: Formula
