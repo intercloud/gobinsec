@@ -4,6 +4,9 @@
 #
 # $ sh -c "$(curl -L https://github.com/intercloud/gobinsec/releases/latest/download/install)"
 #
+# or (if you don't have curl installed):
+#
+# $ sh -c "$(wget -O - https://github.com/intercloud/gobinsec/releases/latest/download/install)"
 
 set -e
 
@@ -83,20 +86,18 @@ else
     executableFolder="/bin"
 fi
 
-# check command availability
-command -v curl >/dev/null 2>&1 || { logF "curl is required"; }
+if command -v curl >/dev/null 2>&1; then
+    downloadCmd="curl -sS --fail --location --output "
+elif command -v wget >/dev/null 2>&1; then
+    downloadCmd="wget --quiet --output-document="
+else
+    logF "curl or wget is required"
+fi
 
 # Set URI to download
 assetUri="${githubUrl}/${owner}/${repo}/releases/download/${version}/${fileName}"
-if [[ "${version}" == "latest" ]]; then
-
-    asset=$(
-        curl -sSf ${githubUrl}/${owner}/${repo}/releases |
-            grep -o "${owner}/${repo}/releases/download/.*/${fileName}" |
-            head -n 1
-    )
-
-    assetUri="${githubUrl}/${asset}"
+if [ "${version}" = "latest" ]; then
+    assetUri="${githubUrl}/${owner}/${repo}/releases/latest/download/${fileName}"
 fi
 
 downloadFolder="/tmp/${binary}"
@@ -104,7 +105,7 @@ mkdir -p ${downloadFolder}
 downloadedFile="${downloadFolder}/${fileName}"
 
 log "[1/2] Download ${assetUri}"
-curl -sS --fail --location --output "${downloadedFile}" "${assetUri}"
+$downloadCmd"${downloadedFile}" "${assetUri}"
 
 log "[2/2] Install ${binary} to '${executableFolder}'"
 if [ -w "${directory}" ]; then
