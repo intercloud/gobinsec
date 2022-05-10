@@ -20,7 +20,13 @@ This tool parses Go binary dependencies and calls [NVD database](https://nvd.nis
 
 ## Installation
 
-To install Gobinsec, type following command:
+For brew users, you can use [intercloud tap](https://github.com/intercloud/homebrew-tap), just type the following commands:
+```
+brew tap intercloud/tap
+brew install intercloud/tap/gobinsec
+```
+
+On Linux and MacOS, you can also use the installation script, just type the following command:
 
 ```
 sh -c "$(curl -L https://github.com/intercloud/gobinsec/releases/latest/download/install)"
