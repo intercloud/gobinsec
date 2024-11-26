@@ -1,3 +1,9 @@
+# Archived
+
+This project has been archived in December 2024.
+
+This tool can now be replaced by https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck
+
 # Gobinsec
 
 This tool parses Go binary dependencies and calls [NVD database](https://nvd.nist.gov/) to produce a vulnerability report. Binaries must have been built with module support to be analyzed with Gobinsec.
